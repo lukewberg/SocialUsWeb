@@ -1,0 +1,27 @@
+<div class="vertical post-container">
+    <div class="horizontal flex-start" style="padding: 10px; width: 100%;">
+        <div class="profile-picture" [style]="'background-image: url(' + authorProfile.photoUrl + ');'"></div>
+        <span class="profile-display-name">{{authorProfile.displayName}}</span>
+    </div>
+    <div class="post-img" [style]="'background-image: url(' + post?.mediaUrl + ');'"></div>
+    <div class="post-content-box vertical" style="align-items: flex-start;">
+        <p>
+            <span class="author-username">{{post?.username? post?.username : authorProfile?.username}}:&emsp;</span>
+            <span class="post-description">{{post?.description}}</span>
+        </p>
+    </div>
+    <div *ngIf="post.comments.length !== 0" style="padding: 0 15px; width: 100%;">
+        <div class="post-comments-box vertical">
+          <app-chat style="align-self: flex-start;" *ngFor="let comment of post?.comments" [comment]="comment">
+          </app-chat>
+        </div>
+    </div>
+    <div class="horizontal end" style="width: 100%; padding: 15px;">
+        <div class="comment-container horizontal" style="width: 500px">
+            <div class="profile-picture" [style]="'background-image: url(' + currentUser.photoUrl + ');'"></div>
+            <div class="comment-input horizontal" [textContent]="comment" placeholder="Write a comment..." 
+            (input)="comment=$event.target.textContent"  contenteditable="true"></div>
+            <div (click)="postComment()" class="send-button"></div>
+        </div>
+    </div>
+</div>

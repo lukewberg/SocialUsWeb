@@ -25,7 +25,8 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/assets/*"
             ],
             "styles": [
               "src/styles.less"
@@ -121,8 +122,13 @@
               "devServerTarget": "SocialUsWeb:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "SocialUsWeb"
 }

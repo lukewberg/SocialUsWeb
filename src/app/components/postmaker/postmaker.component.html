@@ -1,0 +1,23 @@
+<div class="post-maker vertical">
+  <div class="details-container horizontal start">
+    <div class="post-image" 
+      [ngStyle]="{'background-image': imagePreview ? 'url(' + imagePreview + ')' : 'url(/assets/img/image-icn.png)', 'background-size': imagePreview ? 'contain' : '75%'}">
+    </div>
+    <div class="details vertical space-between">
+      <input (change)="uploadImage($event)" id="imageUpload" type="file" style="opacity: 0; visibility: hidden;">
+      <div *ngIf="!uploadPercent" class="upload-button vertical center"><label class="vertical center" for="imageUpload">Upload Media</label></div>
+      <span *ngIf="uploadPercent" class="upload-message">{{uploadPercent && !uploadFinished ? 'Uploading: ' + fileName +'...' : 'Upload complete!'}}</span>
+      <div *ngIf="uploadPercent" class="progress-bar-outer horizontal start">
+        <div
+          [ngStyle]="{'width': uploadPercent + '%'}"
+          [ngClass]="{'progress-bar-working': uploadPercent && !uploadFinished, 'progress-bar-done': uploadFinished}"
+          class="progress-bar-inner"></div>
+      </div>
+    </div>
+  </div>
+  <div class="horizontal space-between" style="width: 100%; align-items: center; margin-top: 10px;">
+    <div class="content-input horizontal" [textContent]="postContent" placeholder="Write a comment..."
+      (input)="postContent=$event.target.textContent" contenteditable="true"></div>
+      <div (click)="createPost()" class="complete-button"></div>
+  </div>
+</div>

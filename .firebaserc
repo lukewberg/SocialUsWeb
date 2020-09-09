@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "socialus-qa": {
+      "hosting": {
+        "SocialUsWeb": [
+          "socialus-qa"
+        ]
+      }
+    }
+  }
+}

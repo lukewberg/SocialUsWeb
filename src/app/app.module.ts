@@ -16,6 +16,9 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { ChatComponent } from './components/chat/chat.component';
 import { PostmakerComponent } from './components/postmaker/postmaker.component';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { FriendsPaneComponent } from './components/friends-pane/friends-pane.component';
+import { ProfilepageComponent } from './components/profilepage/profilepage.component';
+import { ProfileHeaderComponent } from './components/profile-header/profile-header.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
     AuthpageComponent,
     ChatComponent,
     PostmakerComponent,
+    FriendsPaneComponent,
+    ProfilepageComponent,
+    ProfileHeaderComponent,
   ],
   imports: [
     BrowserModule,

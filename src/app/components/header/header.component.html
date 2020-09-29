@@ -1,14 +1,30 @@
 <div class="header horizontal space-between">
     <div class="logo-container">
-        <div class="logo"></div>
+        <div [routerLink]="['']" class="logo"></div>
     </div>
-    <div class="search-bar-container">
-        <input placeholder="Search posts, users, and hashtags..." type="text" class="search-bar">
+    <div class="horizontal">
+      <div class="search-bar-container">
+        <input [(ngModel)]="searchString" placeholder="Search posts, users, and hashtags..." type="text"
+          class="search-bar">
         <div class="search-results-container">
-            <div class="search-result"></div>
+          <div class="search-result"></div>
+        </div>
+      </div>
+      <div (click)="search()" class="search-button"></div>
+    </div>
+    <div class="horizontal center">
+        <div [routerLink]="['/profile']" [queryParams]="{uid: authService.userFirestore?.data().id}"
+          *ngIf="authService.userFirestore?.data()" class="account-button horizontal start">
+          <div class="profile-picture"
+            [style]="'background-image: url(' + authService.userFirestore?.data()?.photoUrl + ');'"></div>
+          <span class="account-name">{{authService.userFirestore?.data()?.displayName}}</span>
+        </div>
+        <div class="message-toggle"
+        (click)="messageService.friendPaneEnabled = !messageService.friendPaneEnabled"
+          [ngClass]="{'message-toggle-on': messageService.friendPaneEnabled, 'message-toggle-off': !messageService.friendPaneEnabled}">
         </div>
     </div>
-    <div (click)="signOut()" class="account-button">
+    <!-- <div (click)="signOut()" class="signout-button">
         Sign Out
-    </div>
+    </div> -->
 </div>

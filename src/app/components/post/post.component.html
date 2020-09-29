@@ -1,16 +1,20 @@
 <div class="vertical post-container">
     <div class="horizontal flex-start" style="padding: 10px; width: 100%;">
-        <div class="profile-picture" [style]="'background-image: url(' + authorProfile.photoUrl + ');'"></div>
-        <span class="profile-display-name">{{authorProfile.displayName}}</span>
+        <div [routerLink]="['/profile']" [queryParams]="{uid: authorProfile?.id}" class="profile-picture" [style]="'background-image: url(' + authorProfile?.photoUrl + ');'"></div>
+        <span class="profile-display-name">{{authorProfile?.displayName}}</span>
     </div>
-    <div class="post-img" [style]="'background-image: url(' + post?.mediaUrl + ');'"></div>
+    <div *ngIf="!isVideo" class="post-img" [style]="'background-image: url(' + post?.mediaUrl + ');'"></div>
+    <div *ngIf="isVideo" class="video-container">
+        <video (loadeddata)="onVideoLoad($event)" (click)="toggleVideo()" #video class="video" [src]="post.mediaUrl"></video>
+        <div (click)="toggleVideo()" class="video-play-pause-button"></div>
+    </div>
     <div class="post-content-box vertical" style="align-items: flex-start;">
         <p>
             <span class="author-username">{{post?.username? post?.username : authorProfile?.username}}:&emsp;</span>
             <span class="post-description">{{post?.description}}</span>
         </p>
     </div>
-    <div *ngIf="post.comments.length !== 0" style="padding: 0 15px; width: 100%;">
+    <div *ngIf="post.comments?.length > 0 && post.comments" style="padding: 0 15px; width: 100%;">
         <div class="post-comments-box vertical">
           <app-chat style="align-self: flex-start;" *ngFor="let comment of post?.comments" [comment]="comment">
           </app-chat>

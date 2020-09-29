@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { User } from 'src/app/types/user';
 import { Post } from 'src/app/types/post';
 import { PostService } from 'src/app/services/post.service';
@@ -13,12 +13,17 @@ export class PostComponent implements OnInit {
   @Input() authorProfile: User;
   @Input() post: Post;
   @Input() currentUser: User;
+  @ViewChild('video') video: ElementRef;
   comment: string;
   isLiked = false;
+  isVideo: boolean;
+  videoHeight: number;
 
   constructor(public postService: PostService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isVideo = this.post.gameType === 'videoPost' ? true : false;
+  }
 
   postComment(): void {
     console.log(this.comment);
@@ -38,6 +43,19 @@ export class PostComponent implements OnInit {
     }).then(() => {
       this.isLiked = true;
     });
+  }
+
+  toggleVideo(): void {
+    if (this.video.nativeElement.paused) {
+      this.video.nativeElement.play();
+    } else {
+      this.video.nativeElement.pause();
+    }
+  }
+
+  onVideoLoad(event: any): void {
+    console.log(this.video.nativeElement.videoHeight);
+    console.log(event);
   }
 
 }

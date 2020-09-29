@@ -19,11 +19,15 @@ export class HomepageComponent implements OnInit, OnDestroy {
   constructor(public postService: PostService, public authService: AuthService, public userService: UserService) { }
 
   ngOnInit(): void {
-    this.authServiceInitialized = this.authService.initializedEvent.subscribe(result => {
-      if (result === 'initialized') {
-        this.getGlobalFeed();
-      }
-    });
+    if (this.authService.userFirestore) {
+      this.getGlobalFeed();
+    } else {
+      this.authServiceInitialized = this.authService.initializedEvent.subscribe(result => {
+        if (result === 'initialized') {
+          this.getGlobalFeed();
+        }
+      });
+    }
   }
 
   getGlobalFeed(): void {
@@ -43,7 +47,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.authServiceInitialized.unsubscribe();
+    if (this.authServiceInitialized) {
+      this.authServiceInitialized.unsubscribe();
+    }
   }
 
   getPostUser(post: any): User {

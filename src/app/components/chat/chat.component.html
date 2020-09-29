@@ -1,7 +1,8 @@
 <div class="chat-container horizontal start">
-    <div class="profile-picture" [style]="'background-image: url(' +comment.avatarUrl  + ');'"></div>
+    <div [routerLink]="['/profile']" [queryParams]="{uid: comment.userId}"  class="profile-picture"
+      [style]="'background-image: url(' +comment.avatarUrl  + ');'"></div>
     <div class="message-container vertical">
-        <span>{{comment.username}}</span>
+        <span [routerLink]="['/profile']" [queryParams]="{uid: comment.userId}">{{comment.username}}</span>
         <p>{{comment.comment}}</p>
     </div>
 </div>

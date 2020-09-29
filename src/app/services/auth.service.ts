@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { PostService } from './post.service';
 import { UserService } from './user.service';
 import * as firebase from 'firebase';
+import { User } from '../types/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,13 @@ export class AuthService {
               public postService: PostService) {
                 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
                 auth.onAuthStateChanged(user => {
-                  this.user = user;
-                  this.getUserDocument(user).then(result => {
-                    this.userFirestore = result;
-                    this.initializedEvent.emit('initialized');
-                  });
+                  if (user) {
+                    this.user = user;
+                    this.getUserDocument(user).then(result => {
+                      this.userFirestore = result;
+                      this.initializedEvent.emit('initialized');
+                    });
+                  }
                 });
               }
 
@@ -78,9 +81,9 @@ export class AuthService {
     });
   }
 
-  getUserDocument(user?: firebase.User): Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>> {
+  getUserDocument(user?: firebase.User, uid?: string): Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('insta_users').doc(user ? user.uid : this.user.uid).get().subscribe(result => {
+      this.fireStore.collection('insta_users').doc(user ? user.uid : uid ? uid : this.user.uid).get().subscribe(result => {
         resolve(result);
       }, error => {
         reject(error);

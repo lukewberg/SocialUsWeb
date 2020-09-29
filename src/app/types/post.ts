@@ -3,7 +3,7 @@ export interface Post {
     followerList: string[];
     gameType: string;
     hashtags: string[];
-    likes: string[];
+    likes: object;
     location: string;
     mediaUrl: string;
     ownerId: string;

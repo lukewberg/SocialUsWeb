@@ -1,4 +1,5 @@
 export interface User {
+    backgroundPhotoUrl: string;
     bio: string;
     displayName: string;
     email: string;
@@ -9,4 +10,5 @@ export interface User {
     photoUrl: string;
     userToken: string[];
     username: string;
+    groups?: string[];
 }

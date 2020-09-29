@@ -1,0 +1,9 @@
+<div class="profile-header horizontal flex-start">
+    <div class="profile-picture" [style]="profile?.photoUrl ? 'background-image: url(' + profile?.photoUrl +');' : ''"></div>
+    <span class="profile-display-name">{{profile?.displayName}}</span>
+    <div style="flex: 1"></div>
+    <div class="follow-button horizontal center" [ngClass]="{'following' : isFollowing, 'not-following': !isFollowing}">
+      {{isFollowing ? 'Following' : 'Follow'}}
+      <div *ngIf="isFollowing" class="following-check-icn"></div>
+    </div>
+</div>

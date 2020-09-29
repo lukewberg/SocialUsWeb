@@ -29,6 +29,8 @@ export class PostService {
       .subscribe(result => {
         this.globalFeed = result.docs;
         resolve(result);
+      }, error => {
+        reject(error);
       });
     });
   }
@@ -94,6 +96,44 @@ export class PostService {
       .catch(error => {
         reject(error);
       });
+    });
+  }
+
+  getProfilePosts(profileId: string, limit?: number): Promise<firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[]> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('posts', ref => ref.where('ownerId', '==', profileId).
+      orderBy('timestamp', 'desc').limitToLast(limit ? limit : 50))
+        .get()
+        .subscribe(result => {
+          resolve(result.docs);
+        }, error => {
+          reject(error);
+        });
+    });
+  }
+
+  search(searchString: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      let payload = {
+        users: [],
+        posts: [],
+        hashtags: []
+      };
+      await this.fireStore.collection('insta_users', ref => ref.where('username', '==', searchString))
+      .get()
+      .subscribe(result => {
+        payload.users = result.docs;
+      }, error => {
+        reject(error);
+      });
+      await this.fireStore.collection('posts', ref => ref.where('description', '==', searchString))
+      .get()
+      .subscribe(result => {
+        payload.posts = result.docs;
+      }, error => {
+        reject(error);
+      });
+      resolve(payload);
     });
   }
 }

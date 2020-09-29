@@ -4,6 +4,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { Post } from 'src/app/types/post';
 import { AuthService } from 'src/app/services/auth.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { UploadTaskSnapshot } from '@angular/fire/storage/interfaces';
 
 @Component({
   selector: 'app-postmaker',
@@ -17,36 +19,59 @@ export class PostmakerComponent implements OnInit {
   uploadFinished = false;
   fileName = '';
   postContent: string;
+  isVideo = false;
+  videoPreview: SafeUrl;
+  docRef: UploadTaskSnapshot;
   @Output() newPost = new EventEmitter<Post>();
 
-  constructor(public postService: PostService, public fireStorage: AngularFireStorage, public authService: AuthService) { }
+  constructor(public postService: PostService,
+              public fireStorage: AngularFireStorage,
+              public authService: AuthService,
+              private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
   }
 
   uploadImage(event: any): void {
-    const imagePreview = new FileReader();
-    imagePreview.readAsDataURL(event.target.files[0]);
-    imagePreview.onloadend = result => {
-      this.imagePreview = imagePreview.result.toString();
-    };
+    const file: File = event.target.files[0];
+    console.log(file);
+
+    if (file.type.split('/')[0] === 'image') {
+      const imagePreview = new FileReader();
+      imagePreview.readAsDataURL(file);
+      imagePreview.onloadend = result => {
+        this.imagePreview = imagePreview.result.toString();
+      };
+    } else {
+      this.videoPreview =  this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file));
+      this.isVideo = true;
+    }
 
     const fileReader = new FileReader();
-    fileReader.readAsArrayBuffer(event.target.files[0]);
+    fileReader.readAsArrayBuffer(file);
     fileReader.onloadend = result => {
-      const task = this.fireStorage.ref('').child(event.target.files[0].name).put(fileReader.result);
-      this.fileName = event.target.files[0].name;
+      const task = this.fireStorage.ref('').child(file.name).put(fileReader.result);
+      this.fileName = file.name;
       task.percentageChanges().subscribe(result => {
         this.uploadPercent = result;
       });
-      task.then(result => {
-        result.ref.getDownloadURL().then(url => {
+      task.then(storageSnapshot => {
+        storageSnapshot.ref.getDownloadURL().then(url => {
           this.uploadFinished = true;
           this.imageUrl = url;
         });
-        console.log(result);
+        this.docRef = storageSnapshot;
       });
     };
+
+  }
+
+  deleteFile(): void {
+    if (this.docRef) {
+      this.docRef.ref.delete().then(result => {
+        this.cleanFields();
+      });
+    }
   }
 
   createPost() {
@@ -54,9 +79,9 @@ export class PostmakerComponent implements OnInit {
     const postObj: Post = {
       description: this.postContent,
       followerList: [],
-      gameType: 'imagePost',
+      gameType: this.isVideo ? 'videoPost' : 'imagePost',
       hashtags: [],
-      likes: [],
+      likes: {},
       location: '',
       mediaUrl: this.imageUrl,
       ownerId: user.id,
@@ -68,6 +93,7 @@ export class PostmakerComponent implements OnInit {
       postObj.postId = result;
       this.newPost.emit(postObj);
       this.cleanFields();
+      this.postContent = undefined;
     });
   }
 
@@ -77,7 +103,9 @@ export class PostmakerComponent implements OnInit {
     this.imagePreview = undefined;
     this.uploadFinished = false;
     this.fileName = '';
-    this.postContent = undefined;
+    this.videoPreview = undefined;
+    this.isVideo = false;
+    this.docRef = undefined;
   }
 
 }

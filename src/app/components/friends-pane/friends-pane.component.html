@@ -1,0 +1,9 @@
+<div *ngIf="messageService.friendPaneEnabled" class="friends-pane vertical start">
+    <span class="friends-label">Friends</span>
+    <div  *ngFor="let friend of userService.friends" class="friend-container horizontal">
+        <div [routerLink]="['/profile']" [queryParams]="{uid: friend?.id}" class="profile-picture"
+          [style]="'background-image: url(' + friend.photoUrl + ');'"></div>
+        <span class="friend-username">{{friend.username }}</span>
+        <div class="chat-button"></div>
+    </div>
+</div>

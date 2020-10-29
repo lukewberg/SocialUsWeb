@@ -6,10 +6,10 @@
             <input (keypress)="signInReturn($event)" [(ngModel)]="password" placeholder="Password..." type="password">
             <div style="width: 100%;" class="horizontal space-between">
                 <a href=""><span class="forgot-password">Forgot account details...</span></a>
-                <div (click)="signIn()" class="sign-in-button horizontal center">Sign In</div>
+                <div (click)="signIn()" class="action-button horizontal center">Sign In</div>
             </div>
             <span class="or-divider">Or</span>
-            <div (click)="isCreateAccount = true" style="margin-top: 25px; width: 100%;" class="horizontal center sign-in-button">
+            <div (click)="isCreateAccount = true" style="margin-top: 25px; width: 100%;" class="horizontal center action-button">
                 Create an account
             </div>
         </div>
@@ -20,7 +20,7 @@
                 <input for="displayName" formControlName="displayName" placeholder="Display Name..." type="text">
                 <input for="password" formControlName="password" placeholder="Password..." type="password">
             </form>
-            <div (click)="createAccount()" style="width: 100%;" class="horizontal center sign-in-button">
+            <div (click)="createAccount()" style="width: 100%;" class="horizontal center action-button">
                 Create account
             </div>
             <div *ngIf="showError" class="error-message horizontal center">{{errorMessage}}</div>

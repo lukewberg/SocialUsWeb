@@ -1,22 +1,28 @@
 <div id="#profilePage" class="profile-page vertical">
   <app-profile-header *ngIf="showProfileHeader" [profile]="profile" [isFollowing]="isFollowing"></app-profile-header>
     <div id="profileContainer" class="profile-container">
-        <div class="profile-background" [style]="profile?.backgroundPhotoUrl ? 'background-image: url(' + profile?.backgroundPhotoUrl + ');' : ''">
-            <div style="position: absolute; left: 250px; bottom: 10px; display: flex;">
-              <div class="social-stats-container">{{followerCount + (followerCount > 1 ? ' followers' : ' follower')}}</div>
-              <div class="social-stats-container">{{followingCount + ' following'}}</div>
-            </div>
+        <div class="profile-background vertical center" [style]="profile?.backgroundPhotoUrl ? 'background-image: url(' + profile?.backgroundPhotoUrl + ');' : ''">
+          <div *ngIf="isSelf" (click)="isEditProfile = !isEditProfile" class="edit-button action-button"></div>
+          <input (change)="uploadProfileImages($event, 'background')" id="backgroundUpload" type="file" style="opacity: 0; visibility: hidden; width: 0; height: 0;">
+            <label *ngIf="isEditProfile && isSelf" for="backgroundUpload">
+              <div class="action-button add-button horizontal center"></div>
+            </label>
         </div>
         <div class="profile-info-container vertical">
-            <div class="profile-picture" [style]="profile?.photoUrl ? 'background-image: url(' + profile?.photoUrl +');' : ''">
+            <div class="profile-picture vertical center" [style]="profile?.photoUrl ? 'background-image: url(' + profile?.photoUrl +');' : ''">
+              <input (change)="uploadProfileImages($event, 'profile')" id="profilePicUpload" type="file" style="opacity: 0; visibility: hidden; width: 0; height: 0;">
+              <label *ngIf="isEditProfile && isSelf" for="profilePicUpload">
+                <div class="action-button add-button"></div>
+              </label>
             </div>
             <div class="vertical" style="align-items: flex-start;">
-                <div class="horizontal" style="margin-top: 10px; width: 725px; padding-right: 20px;">
+                <div class="horizontal" style="width: 725px;">
                   <span class="profile-display-name">{{profile?.displayName}}</span>
                   <div style="flex: 1;"></div>
-
-                  <div class="follow-button horizontal center"
-                    [ngClass]="{'following' : isFollowing, 'not-following': !isFollowing}">
+                  <div class="social-stats-container">{{followerCount + (followerCount !== 1 ? ' followers' : ' follower')}}</div>
+                  <div class="social-stats-container">{{followingCount + ' following'}}</div>
+                  <div (click)="followUser()" class="action-button horizontal center"
+                    [ngClass]="{'following' : isFollowing}">
                     {{isFollowing ? 'Following' : 'Follow'}}
                     <div *ngIf="isFollowing" class="following-check-icn"></div>
                   </div>
@@ -28,15 +34,6 @@
     </div>
     <div *ngIf="posts.length > 0" class="horizontal" style="width: 1000px; align-items: flex-start;">
       <div class="vertical profile-side-container-container">
-        <div *ngIf="groups.length > 0" class="profile-side-container vertical">
-          <div class="horizontal" style="width: 100%;">
-            <span class="container-label">Groups</span>
-          </div>
-          <div class="horizontal" style="flex-wrap: wrap; justify-content: space-between; margin:-5px;">
-            <div [style]="group?.backgroundUrl ? 'background-image: url(' + group.backgroundUrl + ');' : ''"
-              *ngFor="let group of groups" class="side-container-chip"></div>
-          </div>
-        </div>
         <div *ngIf="friends.length > 0" class="profile-side-container vertical">
           <div class="horizontal" style="width: 100%;">
             <span class="container-label">Friends</span>
@@ -45,6 +42,15 @@
             <div [routerLink]="['/profile']" [queryParams]="{uid: friend?.id}"
               [style]="friend?.photoUrl ? 'background-image: url(' + friend.photoUrl + ');' : ''"
               *ngFor="let friend of friends" class="side-container-chip"></div>
+          </div>
+        </div>
+        <div *ngIf="groups.length > 0" class="profile-side-container vertical">
+          <div class="horizontal" style="width: 100%;">
+            <span class="container-label">Groups</span>
+          </div>
+          <div class="horizontal" style="flex-wrap: wrap; justify-content: space-between; margin:-5px;">
+            <div [routerLink]="['/group']" [queryParams]="{gid: profile.groups[i]}" [style]="group?.backgroundUrl ? 'background-image: url(' + group.backgroundUrl + ');' : ''"
+              *ngFor="let group of groups; let i = index;" class="side-container-chip"></div>
           </div>
         </div>
       </div>

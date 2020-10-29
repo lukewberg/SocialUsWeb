@@ -2,7 +2,8 @@
     <div class="profile-picture" [style]="profile?.photoUrl ? 'background-image: url(' + profile?.photoUrl +');' : ''"></div>
     <span class="profile-display-name">{{profile?.displayName}}</span>
     <div style="flex: 1"></div>
-    <div class="follow-button horizontal center" [ngClass]="{'following' : isFollowing, 'not-following': !isFollowing}">
+    <div class="chat-button"></div>
+    <div class="action-button following horizontal center" [ngClass]="{'following' : isFollowing, 'not-following': !isFollowing}">
       {{isFollowing ? 'Following' : 'Follow'}}
       <div *ngIf="isFollowing" class="following-check-icn"></div>
     </div>

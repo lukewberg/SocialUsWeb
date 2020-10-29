@@ -15,10 +15,10 @@
 }
 
 .profile-picture {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 100%;
-    margin: 0 10px;
+    margin-right: 10px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -28,7 +28,9 @@
 
 .profile-display-name {
     font-family: LatoBlack;
-    font-size: 18px;
+    font-size: 17px;
+    outline: none;
+    cursor: pointer;
 }
 
 .post-content-box {
@@ -51,12 +53,12 @@
     box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.25);
     border-radius: 15px;
     padding-top: 15px;
+    margin-bottom: 15px;
 }
 
 .comment-input {
-    background: #fff;
-    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 6px;
+    background: #F0F0F0;
+    border-radius: 25px;
     padding: 10px 10px 10px 15px;
     font-family: LatoBold;
     color: #7D7D7D;
@@ -66,24 +68,33 @@
     min-height: 50px;
     flex: 1;
     align-items: center;
+    max-width: 370px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    transition: all .25s ease;
+}
+
+.comment-input:focus {
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.25);
 }
 
 .send-button {
     width: 50px;
     height: 50px;
-    border-radius: 6px;
     margin-left: 10px;
     cursor: pointer;
-    background: url('/assets/img/send-icn.png') #F7971C;
+    background-image: url('/assets/img/send-icn-white.png');
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 30px;
+    background-size: 60%;
+    padding: 0;
 }
 
 [contenteditable=true]:empty:before {
   content: attr(placeholder);
   pointer-events: none;
-  display: block;
+  //display: block;
   /* For Firefox */
 }
 
@@ -116,4 +127,89 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+.video-scrub-container {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    height: 15px;
+    padding: 0 25px;
+    align-items: center;
+}
+
+.scrub-bar {
+    width: 100%;
+    height: 100%;
+    background-color: #DFDFDF;
+    border-radius: 10px;
+}
+
+.progress {
+    height: 100%;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: #F7971C;
+    transition: all .1s ease;
+    margin-right: -15px;
+    cursor: pointer;
+}
+
+.scrub-button {
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    border-radius: 100%;
+    background-color: #fff;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.interaction-button {
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    background-size: 60%;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: all .25s ease;
+}
+
+.interaction-button:hover {
+    transform: scale(1.1);
+}
+
+.like-button-liked {
+    background-image: url('/assets/img/like-icn-blue.png');
+    animation-name: like-spin;
+    animation-duration: 1.25s;
+    animation-timing-function: cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    animation-iteration-count: 1;
+    animation-play-state: running;
+}
+
+.like-button-unliked {
+    background-image: url('/assets/img/like-icn.png');
+}
+
+.like-count {
+    font-family: LatoBlack;
+    color: #414141;
+    font-size: 14px;
+}
+
+@keyframes like-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(25deg);
+    }
+    50% {
+        transform: rotate(-25deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }

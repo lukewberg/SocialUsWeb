@@ -1,31 +1,46 @@
 <div class="vertical post-container">
-    <div class="horizontal flex-start" style="padding: 10px; width: 100%;">
+    <div class="horizontal flex-start" style="padding: 8px; width: 100%;">
         <div [routerLink]="['/profile']" [queryParams]="{uid: authorProfile?.id}" class="profile-picture" [style]="'background-image: url(' + authorProfile?.photoUrl + ');'"></div>
-        <span class="profile-display-name">{{authorProfile?.displayName}}</span>
+        <span [routerLink]="['/profile']" [queryParams]="{uid: authorProfile?.id}" class="profile-display-name">{{authorProfile?.displayName}}</span>
     </div>
     <div *ngIf="!isVideo" class="post-img" [style]="'background-image: url(' + post?.mediaUrl + ');'"></div>
     <div *ngIf="isVideo" class="video-container">
-        <video (loadeddata)="onVideoLoad($event)" (click)="toggleVideo()" #video class="video" [src]="post.mediaUrl"></video>
-        <div (click)="toggleVideo()" class="video-play-pause-button"></div>
+        <video (loadeddata)="onVideoLoad($event)" (click)="toggleVideo()" (timeupdate)="videoPlayingCallback($event)" #video class="video" [src]="post.mediaUrl"></video>
+        <div *ngIf="!videoIsToggled" (click)="toggleVideo()" class="video-play-pause-button"></div>
+        <div class="video-scrub-container">
+            <div #scrubBar (mouseenter)="pointerInScrub = true" (mouseleave)="pointerInScrub = false"
+            (mousemove)="pointerInScrub && isMouseDown ? videoScrub($event) : undefined" (mousedown)="isMouseDown = true" (mouseup)="isMouseDown = false"
+            class="scrub-bar horizontal flex-start">
+                <div #progressBar class="progress" [style]="'width: ' + videoProgress + '%;'"></div>
+                <div class="scrub-button horizontal center"></div>
+            </div>
+        </div>
     </div>
     <div class="post-content-box vertical" style="align-items: flex-start;">
         <p>
-            <span class="author-username">{{post?.username? post?.username : authorProfile?.username}}:&emsp;</span>
+            <span class="author-username">{{post?.username? post?.username + ':   ' : authorProfile?.username + ':   '}}</span>
             <span class="post-description">{{post?.description}}</span>
         </p>
     </div>
     <div *ngIf="post.comments?.length > 0 && post.comments" style="padding: 0 15px; width: 100%;">
         <div class="post-comments-box vertical">
-          <app-chat style="align-self: flex-start;" *ngFor="let comment of post?.comments" [comment]="comment">
+          <app-chat style="align-self: flex-start; width: 100%;" *ngFor="let comment of post?.comments" [comment]="comment">
           </app-chat>
         </div>
     </div>
-    <div class="horizontal end" style="width: 100%; padding: 15px;">
-        <div class="comment-container horizontal" style="width: 500px">
-            <div class="profile-picture" [style]="'background-image: url(' + currentUser.photoUrl + ');'"></div>
-            <div class="comment-input horizontal" [textContent]="comment" placeholder="Write a comment..." 
-            (input)="comment=$event.target.textContent"  contenteditable="true"></div>
-            <div (click)="postComment()" class="send-button"></div>
+    <div class="horizontal end" style="width: 100%; padding: 0 15px 15px 15px;">
+        <div class="comment-container horizontal start" style="width: 100%;">
+            <div class="horizontal center">
+                <div (click)="like()" class="interaction-button" [ngClass]="{'like-button-unliked': !isLiked, 'like-button-liked': isLiked}"></div>
+                <span *ngIf="post?.likes?.length > 0" class="like-count">{{formatNumber(post.likes.length)}}{{post.likes.length > 1 ? ' likes' : ' like'}}</span>
+            </div>
+            <div style="flex: 1;"></div>
+            <div class="horizontal end" style="width: 500px;">
+                <div class="profile-picture" [style]="'background-image: url(' + currentUser.photoUrl + ');'"></div>
+            <div #commentInput class="comment-input horizontal" placeholder="Write a comment..." (input)="comment=$event.target.textContent"
+            contenteditable="true"></div>
+            <div (click)="postComment()" class="send-button action-button"></div>
+            </div>
         </div>
     </div>
 </div>

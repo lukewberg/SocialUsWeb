@@ -1,0 +1,105 @@
+.chat-pane {
+    width: 400px;
+    min-height: 400px;
+    max-height: 600px;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  margin-right: 10px;
+}
+
+.profile-display-name {
+  font-family: LatoBlack;
+  font-size: 16px;
+}
+
+.chat-header {
+    width: 100%;
+    padding: 7px 20px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+}
+
+.close-button {
+    background-image: url('/assets/img/close-icn.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.chat-container {
+    width: 100%;
+    flex: 1;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    padding: 10px;
+}
+
+.chat-container::-webkit-scrollbar {
+  display: none;
+}
+
+.composition-container {
+    width: 100%;
+    padding: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+}
+
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block;
+  /* For Firefox */
+}
+
+.message-input {
+    background: #F0F0F0;
+    border-radius: 25px;
+    padding: 10px 10px 10px 15px;
+    font-family: LatoBold;
+    color: #7D7D7D;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    min-height: 40px;
+    flex: 1;
+    align-items: center;
+    max-width: 370px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    transition: all .25s ease;
+}
+
+.message-input:focus {
+  box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.25);
+}
+
+.send-button {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background-image: url('/assets/img/send-icn-blue.png');
+    background-size: 65%;
+    background-position: center;
+    background-repeat: no-repeat;
+}

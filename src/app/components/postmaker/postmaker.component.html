@@ -9,7 +9,9 @@
     </div>
     <div class="details vertical end">
       <input (change)="uploadImage($event)" id="imageUpload" type="file" style="opacity: 0; visibility: hidden;">
-      <div *ngIf="!uploadPercent" class="upload-button vertical center"><label class="vertical center" for="imageUpload">Upload Media</label></div>
+      <label *ngIf="!uploadPercent" class="vertical center" for="imageUpload">
+        <div class="action-button vertical center">Upload Media</div>
+      </label>
       <span *ngIf="uploadPercent" class="upload-message">{{uploadPercent && !uploadFinished ? 'Uploading: ' + fileName +'...' : 'Upload complete!'}}</span>
       <div *ngIf="uploadPercent" class="progress-bar-outer horizontal start">
         <div
@@ -20,7 +22,7 @@
     </div>
   </div>
   <div class="horizontal space-between" style="width: 100%; align-items: flex-end; margin-top: 10px;">
-    <div class="content-input horizontal" [textContent]="postContent" placeholder="Write a post..."
+    <div #postInput class="content-input horizontal" placeholder="Write a post..."
       (input)="postContent=$event.target.textContent" contenteditable="true"></div>
       <div (click)="createPost()" class="complete-button"></div>
   </div>

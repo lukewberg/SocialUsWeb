@@ -1,4 +1,10 @@
-import * as firebase from 'firebase';
+import { Message } from './message';
+import { User } from './user';
+
 export interface Thread {
-    members: Array<firebase.firestore.DocumentReference>;
+    members: string[];
+    id?: string;
+    messages?: Message[];
+    groupChatName?: string;
+    profile?: User;
 }

@@ -1,5 +1,7 @@
-import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { Router, ParamMap, ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { PostService } from 'src/app/services/post.service';
@@ -7,6 +9,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Group } from 'src/app/types/group';
 import { Post } from 'src/app/types/post';
 import { User } from 'src/app/types/user';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-profilepage',
@@ -16,8 +19,8 @@ import { User } from 'src/app/types/user';
 export class ProfilepageComponent implements OnInit, OnDestroy {
   profile: User;
   isFollowing: boolean;
-  followerCount: number;
-  followingCount: number;
+  followerCount = 0;
+  followingCount = 0;
   posts = [];
   groups: Group[];
   routeSubscription: Subscription;
@@ -28,17 +31,20 @@ export class ProfilepageComponent implements OnInit, OnDestroy {
   };
   observer: IntersectionObserver;
   friends: User[];
+  accountSubscription: Subscription;
+  isSelf = false;
+  isEditProfile = false;
 
   showProfileHeader = true;
 
   constructor(public authService: AuthService, private router: ActivatedRoute, public postService: PostService,
-              public userService: UserService) { }
+              public userService: UserService, public fireStorage: AngularFireStorage, public fireStore: AngularFirestore) { }
 
   ngOnInit(): void {
     if (this.authService.userFirestore) {
       this.getProfile();
     } else {
-      this.authService.initializedEvent.subscribe(event => {
+      this.accountSubscription = this.authService.initializedEvent.subscribe(event => {
         if (event === 'initialized') {
           this.getProfile();
         }
@@ -59,9 +65,11 @@ export class ProfilepageComponent implements OnInit, OnDestroy {
         this.authService.getUserDocument(undefined, routeParams.get('uid'))
           .then(result => {
             this.profile = result.data() as User;
-            this.isFollowing = [...Object.keys(this.authService.userFirestore.data().following)].includes(this.profile.id);
-            this.followerCount = [...Object.keys(this.authService.userFirestore.data().followers)].length;
-            this.followingCount = [...Object.keys(this.authService.userFirestore.data().following)].length;
+            console.log(this.profile);
+            this.isFollowing = this.authService.userFirestore.data().following.includes(this.profile.id);
+            this.followerCount = this.profile.followers.length;
+            this.followingCount = this.profile.following.length;
+            this.isSelf = this.profile.id === this.authService.userFirestore.data().id;
             this.getProfilePosts(uid);
             this.getProfileGroups();
             this.getProfileFriends();
@@ -103,9 +111,42 @@ export class ProfilepageComponent implements OnInit, OnDestroy {
     });
   }
 
+  followUser(): void {
+    this.userService.followUser(this.profile).then(() => {
+      console.log('Followed User!');
+    });
+  }
+
+  uploadProfileImages(event: any, type: 'background' | 'profile'): void {
+    const file: File = event.target.files[0];
+    const path = type === 'background' ? 'background_pictures/' : '';
+    const fileName = `profile_${uuid.v4()}.${file.type.split('/')[1]}`;
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file);
+    fileReader.onloadend = result => {
+      const task = this.fireStorage.ref(path).child(fileName).put(fileReader.result);
+      task.then(storageSnapshot => {
+        storageSnapshot.ref.getDownloadURL().then(url => {
+          const payload = type === 'background' ? { backgroundPhotoUrl: url } : { photoUrl: url };
+          this.userService.updateProfile(payload).then(() => {
+            if (type === 'background') {
+              this.profile.backgroundPhotoUrl = url;
+            } else {
+              this.profile.photoUrl = url;
+            }
+          });
+        });
+      });
+    };
+
+  }
+
   ngOnDestroy(): void {
     this.routeSubscription.unsubscribe();
     this.observer.disconnect();
+    if (this.accountSubscription) {
+      this.accountSubscription.unsubscribe();
+    }
   }
 
 }

@@ -7,7 +7,6 @@
     background-color: #fff;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
     padding: 15px;
-    overflow-y: scroll;
     -ms-overflow-style: none;
     /* IE and Edge */
     scrollbar-width: none;
@@ -19,11 +18,11 @@
   display: none;
 }
 
-.friends-label {
+.section-label {
     font-family: LatoBlack;
     font-size: 24px;
     align-self: flex-start;
-    margin-bottom: 15px;
+    margin: 10px 0;
     user-select: none;
 }
 
@@ -62,4 +61,10 @@
     margin-left: auto;
     cursor: pointer;
     background: center / 60% no-repeat url('/assets/img/chat-icn.png') #3EA0D8;
+}
+
+.chat-pane {
+    position: absolute;
+    bottom: 0;
+    right: 100px;
 }

@@ -3,12 +3,12 @@ export interface Post {
     followerList: string[];
     gameType: string;
     hashtags: string[];
-    likes: object;
+    likes: string[];
     location: string;
     mediaUrl: string;
     ownerId: string;
     postId: string;
-    timestamp: string;
+    timestamp: firebase.firestore.Timestamp;
     username: string;
     comments?: any[];
 }

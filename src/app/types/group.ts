@@ -5,4 +5,5 @@ export interface Group {
     groupName: string;
     isPrivate: boolean;
     members: object;
+    about: string;
 }

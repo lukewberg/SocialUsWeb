@@ -1,0 +1,37 @@
+<div class="group-page vertical">
+    <div class="group-container">
+        <div class="group-background" [style]="group?.backgroundUrl ? 'background-image: url(' + group?.backgroundUrl + ');' : ''"></div>
+        <div class="group-info-container horizontal flex-start">
+            <div class="veritcal">
+                <span class="group-display-name">{{group?.groupName}}</span>
+                <div class="group-description">{{group?.about}}</div>
+            </div>
+            <div style="flex: 1;"></div>
+            <div class="vertical">
+                <div class="horizontal">
+                    <div *ngIf="group?.isPrivate" class="status-icon"></div>
+                    <div class="join-button" [ngClass]="{'not-joined': !groupMembers.includes(user?.id)}">
+                        {{!groupMembers.includes(user?.id) && group?.isPrivate ? 'Join Group' : 'Joined'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="horizontal flex-start" style="width: 1000px; align-items: flex-start;">
+        <div *ngIf="groupMembers.length > 0 && posts.length > 0" class="group-side-container-container vertical">
+            <div class="group-side-container vertical">
+                <div class="horizontal" style="width: 100%;">
+                  <span class="container-label">Members</span>
+                </div>
+                <div class="horizontal" style="flex-wrap: wrap; justify-content: space-between; margin:-5px;">
+                    <div *ngFor="let member of groupMembers"
+                    [routerLink]="['/profile']" [queryParams]="{uid: member?.id}"
+                    [style]="member?.photoUrl ? 'background-image: url(' + member.photoUrl + ');' :''"
+                    class="side-container-chip"></div>
+                </div>
+            </div>
+        </div>
+        <app-post *ngFor="let post of posts" [authorProfile]="getPostUser(post)" [post]="post"
+          [currentUser]="authService.userFirestore.data()"></app-post>
+    </div>
+</div>

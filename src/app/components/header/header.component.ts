@@ -11,6 +11,7 @@ import { PostService } from 'src/app/services/post.service';
 })
 export class HeaderComponent implements OnInit {
   searchString: string;
+  dropdownToggled = false;
 
   constructor(public authService: AuthService, public router: Router, public messageService: MessageService,
               public postService: PostService) { }
@@ -31,7 +32,7 @@ export class HeaderComponent implements OnInit {
   search(): void {
     this.postService.search(this.searchString).then(result => {
       console.log(result);
-    })
+    });
   }
 
 }

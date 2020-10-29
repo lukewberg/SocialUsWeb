@@ -1,8 +1,10 @@
-<div class="chat-container horizontal start">
-    <div [routerLink]="['/profile']" [queryParams]="{uid: comment.userId}"  class="profile-picture"
+<div [ngClass]="{'chat-container': !isSelf, 'chat-container-self': isSelf}" class="horizontal start" [style]="message? 'margin-right: 0; margin-left: 0;': ''">
+    <div *ngIf="!message" [routerLink]="['/profile']" [queryParams]="{uid: comment.userId}"  class="profile-picture"
       [style]="'background-image: url(' +comment.avatarUrl  + ');'"></div>
-    <div class="message-container vertical">
+    <div class="message-container vertical" [ngClass]="{'message-container-self': isSelf}" [style]="message? 'margin: 0': ''">
+      <div *ngIf="!message" style="width: 100%;" class="horizontal" [ngClass]="{'end': isSelf}">
         <span [routerLink]="['/profile']" [queryParams]="{uid: comment.userId}">{{comment.username}}</span>
-        <p>{{comment.comment}}</p>
+      </div>
+        <p>{{comment?.comment ? comment.comment : message.message}}</p>
     </div>
 </div>

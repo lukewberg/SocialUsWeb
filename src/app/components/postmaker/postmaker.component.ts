@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { PostService } from '../../services/post.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
@@ -6,6 +6,7 @@ import { Post } from 'src/app/types/post';
 import { AuthService } from 'src/app/services/auth.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { UploadTaskSnapshot } from '@angular/fire/storage/interfaces';
+import { firestore } from 'firebase';
 
 @Component({
   selector: 'app-postmaker',
@@ -23,6 +24,7 @@ export class PostmakerComponent implements OnInit {
   videoPreview: SafeUrl;
   docRef: UploadTaskSnapshot;
   @Output() newPost = new EventEmitter<Post>();
+  @ViewChild('postInput') postInput: ElementRef;
 
   constructor(public postService: PostService,
               public fireStorage: AngularFireStorage,
@@ -74,19 +76,19 @@ export class PostmakerComponent implements OnInit {
     }
   }
 
-  createPost() {
+  createPost(): void {
     const user = this.authService.userFirestore.data();
     const postObj: Post = {
       description: this.postContent,
       followerList: [],
       gameType: this.isVideo ? 'videoPost' : 'imagePost',
       hashtags: [],
-      likes: {},
+      likes: [],
       location: '',
       mediaUrl: this.imageUrl,
       ownerId: user.id,
       postId: '',
-      timestamp: new Date().toISOString(),
+      timestamp: firestore.Timestamp.now(),
       username: user.username,
     };
     this.postService.createPost(postObj).then(result => {
@@ -106,6 +108,7 @@ export class PostmakerComponent implements OnInit {
     this.videoPreview = undefined;
     this.isVideo = false;
     this.docRef = undefined;
+    this.postInput.nativeElement.innerText = '';
   }
 
 }

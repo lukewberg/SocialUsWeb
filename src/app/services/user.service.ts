@@ -31,6 +31,8 @@ export class UserService {
           result.forEach(user => {
             this.following.push(user.data());
           });
+        }).catch(error => {
+          console.log('Looks like there are no followers');
         });
         this.getFriends(this.authService.userFirestore.data() as User).then(result => {
           this.friends = result;
@@ -45,14 +47,22 @@ export class UserService {
    * @returns Observable<DocumentSnapshot<DocumentData>>
    */
 
-  getUser(id: string): Observable<firestore.DocumentSnapshot<firestore.DocumentData>> {
-    return this.fireStore.collection('insta_users').doc<User>(id).get();
+  getUser(id: string): Promise<firestore.DocumentSnapshot<firestore.DocumentData>> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('insta_users').doc<User>(id)
+      .get()
+      .subscribe(result => {
+        resolve(result);
+      }, error => {
+        reject(error);
+      });
+    });
   }
 
   getFollowing(): Promise<firestore.QueryDocumentSnapshot<firestore.DocumentData>[]> {
     return new Promise((resolve, reject) => {
       this.fireStore.collection('insta_users', ref => ref.where('id', 'in',
-      [...Object.keys(this.authService.userFirestore.data().following)]))
+      this.authService.userFirestore.data().following))
       .get()
       .subscribe(result => {
         resolve(result.docs);
@@ -78,10 +88,16 @@ export class UserService {
     });
   }
 
-  followUser(uid: string): Promise<void> {
+  followUser(profile: User): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('insta_users').doc(uid).update({
-        followers: firestore.FieldValue.arrayUnion()
+      this.fireStore.collection('insta_users').doc(profile.id).update({
+        followers: firestore.FieldValue.arrayUnion(this.authService.userFirestore.data().id)
+      });
+      console.log(this.authService.userFirestore.data().id);
+      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.data().id).update({
+        following: firestore.FieldValue.arrayUnion(profile.id)
+      }).then(() => {
+        resolve();
       });
     });
   }
@@ -104,6 +120,29 @@ export class UserService {
       } else {
         reject();
       }
+    });
+  }
+
+  getGroup(gid: string): Promise<firestore.DocumentSnapshot<firestore.DocumentData>> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('groups').doc(gid)
+      .get()
+      .subscribe(result => {
+        resolve(result);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  updateProfile(payload: object): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.data().id).update(payload)
+        .then(result => {
+          resolve(result);
+        }).catch(error => {
+          reject(error);
+        });
     });
   }
 }

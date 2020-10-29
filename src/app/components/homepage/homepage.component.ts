@@ -33,7 +33,6 @@ export class HomepageComponent implements OnInit, OnDestroy {
   getGlobalFeed(): void {
     this.postService.getGlobalFeed(this.authService.userFirestore).then(result => {
       result.docs.forEach(document => {
-        console.log(document.data());
         this.postService.getComments(document.id).then(comments => {
           const post = document.data();
           post.comments = [];

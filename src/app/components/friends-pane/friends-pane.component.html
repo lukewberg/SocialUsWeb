@@ -1,9 +1,19 @@
 <div *ngIf="messageService.friendPaneEnabled" class="friends-pane vertical start">
-    <span class="friends-label">Friends</span>
-    <div  *ngFor="let friend of userService.friends" class="friend-container horizontal">
+    <span class="section-label">Friends</span>
+    <div *ngFor="let friend of userService.friends" class="friend-container horizontal">
         <div [routerLink]="['/profile']" [queryParams]="{uid: friend?.id}" class="profile-picture"
           [style]="'background-image: url(' + friend.photoUrl + ');'"></div>
         <span class="friend-username">{{friend.username }}</span>
-        <div class="chat-button"></div>
+        <div (click)="openChat(friend.id, friend)" class="chat-button"></div>
     </div>
+    <span *ngIf="messageService?.threads?.length > 0" class="section-label">Conversations</span>
+    <div *ngFor="let thread of messageService.threads" class="friend-container horizontal">
+        <div [routerLink]="['/profile']" [queryParams]="{uid: thread?.profile?.id}" class="profile-picture"
+          [style]="'background-image: url(' + thread.profile?.photoUrl + ');'"></div>
+        <span class="friend-username">{{thread?.profile?.username }}</span>
+        <div (click)="openChat(thread?.profile?.id, thread.profile)" class="chat-button"></div>
+    </div>
+  <div *ngIf="chatOpen" class="chat-pane">
+    <app-chat-pane [thread]="currentChat" [profile]="chatRecipient" (chatClosed)="this.chatOpen = false;" (sendMessage)="sendMessage($event)"></app-chat-pane>
+  </div>
 </div>

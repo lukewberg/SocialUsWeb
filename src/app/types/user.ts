@@ -3,8 +3,8 @@ export interface User {
     bio: string;
     displayName: string;
     email: string;
-    followers: {}[];
-    following: {}[];
+    followers: string[];
+    following: string[];
     friendState: {}[];
     id: string;
     photoUrl: string;

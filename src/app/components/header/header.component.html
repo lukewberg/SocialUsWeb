@@ -13,12 +13,19 @@
       <div (click)="search()" class="search-button"></div>
     </div>
     <div class="horizontal center">
+      <div (mouseenter)="dropdownToggled = true" class="dropdown-container">
         <div [routerLink]="['/profile']" [queryParams]="{uid: authService.userFirestore?.data().id}"
-          *ngIf="authService.userFirestore?.data()" class="account-button horizontal start">
+          *ngIf="authService?.user" class="account-button horizontal start">
           <div class="profile-picture"
             [style]="'background-image: url(' + authService.userFirestore?.data()?.photoUrl + ');'"></div>
           <span class="account-name">{{authService.userFirestore?.data()?.displayName}}</span>
         </div>
+        <div (mouseleave)="dropdownToggled = false" *ngIf="dropdownToggled" class="dropdown vertical">
+          <div class="action-button horizontal center">
+            <span (click)="signOut()">Sign Out</span>
+          </div>
+        </div>
+      </div>
         <div class="message-toggle"
         (click)="messageService.friendPaneEnabled = !messageService.friendPaneEnabled"
           [ngClass]="{'message-toggle-on': messageService.friendPaneEnabled, 'message-toggle-off': !messageService.friendPaneEnabled}">

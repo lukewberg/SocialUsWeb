@@ -19,6 +19,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { FriendsPaneComponent } from './components/friends-pane/friends-pane.component';
 import { ProfilepageComponent } from './components/profilepage/profilepage.component';
 import { ProfileHeaderComponent } from './components/profile-header/profile-header.component';
+import { GrouppageComponent } from './components/grouppage/grouppage.component';
+import { ChatPaneComponent } from './components/chat-pane/chat-pane.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { ProfileHeaderComponent } from './components/profile-header/profile-head
     FriendsPaneComponent,
     ProfilepageComponent,
     ProfileHeaderComponent,
+    GrouppageComponent,
+    ChatPaneComponent,
   ],
   imports: [
     BrowserModule,

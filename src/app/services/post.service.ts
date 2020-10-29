@@ -4,6 +4,7 @@ import { Post } from '../types/post';
 import { Comment } from '../types/comment';
 import { User } from '../types/user';
 import { Like } from '../types/like';
+import { firestore } from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class PostService {
 
   getGlobalFeed(user: any): Promise<QuerySnapshot<DocumentData>> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('posts', ref => ref.where('ownerId', 'in', [...Object.keys(user.data().following)])
+      this.fireStore.collection('posts', ref => ref.where('ownerId', 'in', user.data().following)
       .orderBy('timestamp', 'desc')
       .limitToLast(50))
       .get()
@@ -58,7 +59,7 @@ export class PostService {
         mediaUrl: post.mediaUrl,
         postId: post.postId,
         userId: user.id,
-        timestamp: new Date().toISOString(),
+        timestamp: firestore.Timestamp.now(),
         username: user.username
       };
 
@@ -72,15 +73,29 @@ export class PostService {
     });
   }
 
-  likePost(like: Like): Promise<void> {
+  likePost(pid: string, uid: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('likes').doc(this.fireStore.createId())
-        .set(like)
+      this.fireStore.collection('posts').doc(pid).update({
+        likes: firestore.FieldValue.arrayUnion(uid)
+      })
         .then(result => {
           resolve(result);
         }).catch(error => {
           reject(error);
         });
+    });
+  }
+
+  removeLike(pid: string, uid: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('posts').doc(pid).update({
+        likes: firestore.FieldValue.arrayRemove(uid)
+      })
+      .then(result => {
+        resolve(result);
+      }).catch(error => {
+        reject(error);
+      });
     });
   }
 
@@ -134,6 +149,18 @@ export class PostService {
         reject(error);
       });
       resolve(payload);
+    });
+  }
+
+  getGroupPosts(gid: string): Promise<firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[]> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('groups').doc(gid).collection('group_posts', ref => ref.orderBy('timestamp', 'asc').limitToLast(30))
+      .get()
+      .subscribe(result => {
+        resolve(result.docs);
+      }, error => {
+        reject(error);
+      });
     });
   }
 }

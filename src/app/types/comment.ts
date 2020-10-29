@@ -5,7 +5,7 @@ export interface Comment {
     comment: string;
     mediaUrl: string;
     postId: string;
-    timestamp: string;
+    timestamp: firebase.firestore.Timestamp;
     userId: string;
     username: string;
 }

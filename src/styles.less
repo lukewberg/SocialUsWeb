@@ -96,3 +96,67 @@ a {
 .action-button:hover {
   transform: scale(1.025);
 }
+
+.hidden-button {
+  padding: 10px;
+  font-family: Lato;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+/Edge */
+  user-select: none;
+  /* Standard */
+}
+
+.hidden-button:hover {
+  transform: scale(1.025);
+  background-color: #E9E9E9;
+}
+
+.input {
+  background: #F0F0F0;
+  border-radius: 25px;
+  padding: 10px 10px 10px 15px;
+  font-family: LatoBold;
+  color: #7D7D7D;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  min-height: 50px;
+  flex: 1;
+  align-items: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  transition: all .25s ease;
+}
+
+.input:focus {
+  box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.25);
+}
+
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  pointer-events: none;
+  //display: block;
+  /* For Firefox */
+}
+
+.add-button {
+  width: 75px;
+  height: 75px;
+  border-radius: 100%;
+  background-image: url('/assets/img/add-icn.png');
+  background-size: 45%;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0;
+}

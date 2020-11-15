@@ -19,7 +19,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
   constructor(public postService: PostService, public authService: AuthService, public userService: UserService) { }
 
   ngOnInit(): void {
-    if (this.authService.userFirestore) {
+    if (this.authService.userFirestore && this.authService.userFirestore.data().following.length > 0) {
       this.getGlobalFeed();
     } else {
       this.authServiceInitialized = this.authService.initializedEvent.subscribe(result => {
@@ -33,7 +33,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
   getGlobalFeed(): void {
     this.postService.getGlobalFeed(this.authService.userFirestore).then(result => {
       result.docs.forEach(document => {
-        this.postService.getComments(document.id).then(comments => {
+        this.postService.getComments(document.id).then(async comments => {
           const post = document.data();
           post.comments = [];
           comments.docs.forEach(comment => {

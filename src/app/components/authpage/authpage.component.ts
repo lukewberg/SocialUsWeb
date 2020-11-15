@@ -3,6 +3,8 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { AngularFireStorage } from '@angular/fire/storage';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-authpage',
@@ -17,8 +19,12 @@ export class AuthpageComponent implements OnInit {
   signUpForm: FormGroup;
   showError = false;
   errorMessage: string;
+  profilePicture: string | ArrayBuffer;
+  fileType: string;
+  imagePreview = '/assets/img/user-icn-white.png';
 
-  constructor(public authService: AuthService, public router: Router, formBuilder: FormBuilder, public userService: UserService) {
+  constructor(public authService: AuthService, public router: Router, formBuilder: FormBuilder, public userService: UserService,
+              public fireStorage: AngularFireStorage) {
     this.signUpForm = formBuilder.group({
       email: ['', [Validators.required]],
       username: ['', [Validators.required]],
@@ -52,12 +58,39 @@ export class AuthpageComponent implements OnInit {
       this.signUpForm.value.username,
       this.signUpForm.value.displayName
     ).then(result => {
-      this.showError = false;
-      this.router.navigateByUrl('');
+      const fileName = `profile_${uuid.v4()}.${this.fileType}`;
+      const task = this.fireStorage.ref('').child(fileName).put(this.profilePicture);
+      task.then(storageSnapshot => {
+        storageSnapshot.ref.getDownloadURL().then(url => {
+          const payload = { photoUrl: url };
+          this.userService.updateProfile(payload).then(() => {
+            this.showError = false;
+            console.log('Profile created!');
+            this.router.navigateByUrl('');
+          });
+        });
+      });
     }).catch(error => {
       this.showError = true;
       this.errorMessage = error.message;
     });
+  }
+
+  loadProfilePicture(event: any): void {
+    const file: File = event.target.files[0];
+    this.fileType = file.type.split('/')[1];
+
+    const imagePreview = new FileReader();
+    imagePreview.readAsDataURL(file);
+    imagePreview.onloadend = result => {
+      this.imagePreview = imagePreview.result.toString();
+    };
+
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file);
+    fileReader.onloadend = result => {
+      this.profilePicture = fileReader.result;
+    };
   }
 
 }

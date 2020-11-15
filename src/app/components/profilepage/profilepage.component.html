@@ -2,7 +2,7 @@
   <app-profile-header *ngIf="showProfileHeader" [profile]="profile" [isFollowing]="isFollowing"></app-profile-header>
     <div id="profileContainer" class="profile-container">
         <div class="profile-background vertical center" [style]="profile?.backgroundPhotoUrl ? 'background-image: url(' + profile?.backgroundPhotoUrl + ');' : ''">
-          <div *ngIf="isSelf" (click)="isEditProfile = !isEditProfile" class="edit-button action-button"></div>
+          <div *ngIf="isSelf" (click)="toggleProfileEdit()" class="edit-button action-button" [ngClass]="{'edit-button-save': isEditProfile}"></div>
           <input (change)="uploadProfileImages($event, 'background')" id="backgroundUpload" type="file" style="opacity: 0; visibility: hidden; width: 0; height: 0;">
             <label *ngIf="isEditProfile && isSelf" for="backgroundUpload">
               <div class="action-button add-button horizontal center"></div>
@@ -17,17 +17,22 @@
             </div>
             <div class="vertical" style="align-items: flex-start;">
                 <div class="horizontal" style="width: 725px;">
-                  <span class="profile-display-name">{{profile?.displayName}}</span>
-                  <div style="flex: 1;"></div>
-                  <div class="social-stats-container">{{followerCount + (followerCount !== 1 ? ' followers' : ' follower')}}</div>
-                  <div class="social-stats-container">{{followingCount + ' following'}}</div>
-                  <div (click)="followUser()" class="action-button horizontal center"
+                  <div *ngIf="isSelf && isEditProfile" class="edit-input input horizontal" placeholder="New display name..." (input)="profile.displayName=$event.target.textContent"
+                  contenteditable="true"></div>
+                  <span *ngIf="!isEditProfile" class="profile-display-name">{{profile?.displayName}}</span>
+                  <div *ngIf="!isEditProfile" style="flex: 1;"></div>
+                  <div class="hidden-button social-stats-container">{{followerCount + (followerCount !== 1 ? ' followers' : ' follower')}}</div>
+                  <div class="hidden-button social-stats-container">{{followingCount + ' following'}}</div>
+                  <div *ngIf="!isSelf" (click)="isFollowing ? unfollowUser() : followUser()" class="action-button horizontal center"
                     [ngClass]="{'following' : isFollowing}">
                     {{isFollowing ? 'Following' : 'Follow'}}
                     <div *ngIf="isFollowing" class="following-check-icn"></div>
                   </div>
                 </div>
-                <p class="profile-bio">{{profile?.bio ? profile.bio : 'No information given...'}}</p>
+                <span *ngIf="!isEditProfile" class="profile-username">@{{profile?.username}}</span>
+                <p *ngIf="!isEditProfile" class="profile-bio">{{profile?.bio ? profile.bio : 'No information given...'}}</p>
+                <div *ngIf="isSelf && isEditProfile" class="edit-input input horizontal" style="margin-top: 10px;" placeholder="New bio..." (input)="profile.bio=$event.target.textContent"
+                  contenteditable="true"></div>
             </div>
             <div class="profile-bottom-bar"></div>
         </div>

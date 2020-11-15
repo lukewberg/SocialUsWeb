@@ -56,46 +56,16 @@
     margin-bottom: 15px;
 }
 
-.comment-input {
-    background: #F0F0F0;
-    border-radius: 25px;
-    padding: 10px 10px 10px 15px;
-    font-family: LatoBold;
-    color: #7D7D7D;
-    font-size: 14px;
-    border: none;
-    outline: none;
-    min-height: 50px;
-    flex: 1;
-    align-items: center;
-    max-width: 370px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    transition: all .25s ease;
-}
-
-.comment-input:focus {
-    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.25);
-}
-
 .send-button {
     width: 50px;
     height: 50px;
-    margin-left: 10px;
-    cursor: pointer;
-    background-image: url('/assets/img/send-icn-white.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 60%;
     padding: 0;
-}
-
-[contenteditable=true]:empty:before {
-  content: attr(placeholder);
-  pointer-events: none;
-  //display: block;
-  /* For Firefox */
+    cursor: pointer;
+    mask-image: url('/assets/img/send-icn.png');
+    background-color: #4aabfa;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: 30px;
 }
 
 .video-container {
@@ -172,7 +142,6 @@
     height: 50px;
     background-size: 60%;
     cursor: pointer;
-    margin-right: 10px;
     transition: all .25s ease;
 }
 
@@ -197,6 +166,79 @@
     font-family: LatoBlack;
     color: #414141;
     font-size: 14px;
+}
+
+.game-icn {
+    width: 50px;
+    height: 50px;
+    background-image: url('/assets/img/game-icn.png');
+    background-size: 75%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.tictactoe-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
+    width: 100%;
+    height: 100%;
+}
+
+.square {
+    width: 150px;
+    height: 150px;
+    grid-column-start: auto;
+    grid-column-end: auto;
+    grid-row-start: auto;
+    grid-row-end: auto;
+    margin: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.square:hover {
+    transform: scale(1.025);
+}
+
+.tictactoe-game-info-container {
+    padding: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+.player-container {
+    padding: 5px 15px 5px 10px;
+    border-radius: 100px;
+    transition: all .25s ease;
+    background-color: #F0F0F0;
+}
+
+.player-turn {
+    background-color: #4aabfa;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+}
+
+.x {
+    mask-image: url('/assets/img/cross-icn.svg');
+    background-color: #4aabfa;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    width: 100px;
+    height: 100px;
+}
+
+.o {
+    mask-image: url('/assets/img/circle-icn.svg');
+    background-color: #4aabfa;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    width: 100px;
+    height: 100px;
 }
 
 @keyframes like-spin {

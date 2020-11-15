@@ -1,29 +1,33 @@
 <div class="post-maker vertical">
-  <div class="details-container horizontal start">
-    <div class="post-image"
+  <div class="details-container vertical start">
+    <div *ngIf="imagePreview || videoPreview" class="post-image"
       [ngStyle]="{'background-image': imagePreview && !isVideo ? 'url(' + imagePreview + ')' : isVideo ? '' :
-      'url(/assets/img/image-icn.png)', 'background-size': imagePreview ? 'contain' : '75%', 'background-color': isVideo
+      'url(/assets/img/image-icn.png)', 'background-size': imagePreview ? 'cover' : '75%', 'background-color': isVideo
       ? '#fff' : '#F0F0F0'}">
-      <div *ngIf="imageUrl" (click)="deleteFile()" class="delete-media-button"></div>
-      <video *ngIf="isVideo" [src]="videoPreview" autoplay></video>
+      <div *ngIf="imageUrl" (click)="deleteFile()" class="delete-media-button action-button"></div>
+      <video *ngIf="isVideo" [src]="videoPreview"></video>
     </div>
-    <div class="details vertical end">
-      <input (change)="uploadImage($event)" id="imageUpload" type="file" style="opacity: 0; visibility: hidden;">
+    <div class="horizontal start" style="width: 100%; align-items: center; margin-top: 10px;">
+    <div class="profile-picture" [style]="'background-image: url(' + authService.userFirestore?.data()?.photoUrl + ');'"></div>
+    <div #postInput class="input horizontal" style="margin-left: 15px;" placeholder="Write a post..."
+      (input)="postContent=$event.target.textContent" contenteditable="true"></div>
+  </div>
+    <div class="details horizontal end">
+      <input (change)="uploadImage($event)" id="imageUpload" type="file" style="opacity: 0; visibility: hidden; display: none;">
       <label *ngIf="!uploadPercent" class="vertical center" for="imageUpload">
         <div class="action-button vertical center">Upload Media</div>
       </label>
-      <span *ngIf="uploadPercent" class="upload-message">{{uploadPercent && !uploadFinished ? 'Uploading: ' + fileName +'...' : 'Upload complete!'}}</span>
+      <div class="vertical end" style="align-items: flex-start;">
+        <span *ngIf="uploadPercent" class="upload-message">{{uploadPercent && !uploadFinished ? 'Uploading: ' + fileName +'...' : 'Upload complete!'}}</span>
       <div *ngIf="uploadPercent" class="progress-bar-outer horizontal start">
         <div
           [ngStyle]="{'width': uploadPercent + '%'}"
           [ngClass]="{'progress-bar-working': uploadPercent && !uploadFinished, 'progress-bar-done': uploadFinished}"
           class="progress-bar-inner"></div>
       </div>
+      </div>
+      <div style="flex: 1;"></div>
+      <div (click)="createPost()" class="complete-button action-button"></div>
     </div>
-  </div>
-  <div class="horizontal space-between" style="width: 100%; align-items: flex-end; margin-top: 10px;">
-    <div #postInput class="content-input horizontal" placeholder="Write a post..."
-      (input)="postContent=$event.target.textContent" contenteditable="true"></div>
-      <div (click)="createPost()" class="complete-button"></div>
   </div>
 </div>

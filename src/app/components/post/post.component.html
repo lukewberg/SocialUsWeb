@@ -2,8 +2,50 @@
     <div class="horizontal flex-start" style="padding: 8px; width: 100%;">
         <div [routerLink]="['/profile']" [queryParams]="{uid: authorProfile?.id}" class="profile-picture" [style]="'background-image: url(' + authorProfile?.photoUrl + ');'"></div>
         <span [routerLink]="['/profile']" [queryParams]="{uid: authorProfile?.id}" class="profile-display-name">{{authorProfile?.displayName}}</span>
+        <div style="flex: 1;"></div>
+        <div *ngIf="isGame" class="game-icn"></div>
     </div>
-    <div *ngIf="!isVideo" class="post-img" [style]="'background-image: url(' + post?.mediaUrl + ');'"></div>
+    <div *ngIf="isGame && isTicTacToe" class="tictactoe-container vertical center">
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareOne == 'X', 'o': post?.squareOne == 'O'}"></div>
+        </div>
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareTwo == 'X', 'o': post?.squareTwo == 'O'}"></div>
+        </div>
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareThree == 'X', 'o': post?.squareThree == 'O'}"></div>
+        </div>
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareFour == 'X', 'o': post?.squareFour == 'O'}"></div>
+        </div>
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareFive == 'X', 'o': post?.squareFive == 'O'}"></div>
+        </div>
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareSix == 'X', 'o': post?.squareSix == 'O'}"></div>
+        </div>
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareSeven == 'X', 'o': post?.squareSeven == 'O'}"></div>
+        </div>
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareEight == 'X', 'o': post?.squareEight == 'O'}"></div>
+        </div>
+        <div class="square vertical center">
+            <div [ngClass]="{'x': post?.squareNine == 'X', 'o': post?.squareNine == 'O'}"></div>
+        </div>
+    </div>
+    <div *ngIf="isGame && isTicTacToe" class="tictactoe-game-info-container horizontal center">
+        <div class="player-container horizontal center">
+            <div class="profile-picture" [style]="'background-image: url(' + authorProfile?.photoUrl + ');'"></div>
+            <span class="profile-display-name">{{authorProfile?.displayName}}</span>
+        </div>
+        <span style="margin: 0 20px; font-family: LatoBlack; font-size: 18px;">VS</span>
+        <div class="player-container horizontal center">
+            <div class="profile-picture" [style]="'background-image: url(' + opponentProfile?.photoUrl + ');'"></div>
+            <span class="profile-display-name">{{opponentProfile?.displayName}}</span>
+        </div>
+    </div>
+    <div *ngIf="!isVideo && !isGame" class="post-img" [style]="'background-image: url(' + post?.mediaUrl + ');'"></div>
     <div *ngIf="isVideo" class="video-container">
         <video (loadeddata)="onVideoLoad($event)" (click)="toggleVideo()" (timeupdate)="videoPlayingCallback($event)" #video class="video" [src]="post.mediaUrl"></video>
         <div *ngIf="!videoIsToggled" (click)="toggleVideo()" class="video-play-pause-button"></div>
@@ -22,13 +64,13 @@
             <span class="post-description">{{post?.description}}</span>
         </p>
     </div>
-    <div *ngIf="post.comments?.length > 0 && post.comments" style="padding: 0 15px; width: 100%;">
+    <div *ngIf="post.comments?.length > 0 && post.comments && !isGame" style="padding: 0 15px; width: 100%;">
         <div class="post-comments-box vertical">
           <app-chat style="align-self: flex-start; width: 100%;" *ngFor="let comment of post?.comments" [comment]="comment">
           </app-chat>
         </div>
     </div>
-    <div class="horizontal end" style="width: 100%; padding: 0 15px 15px 15px;">
+    <div *ngIf="!isGame" class="horizontal end" style="width: 100%; padding: 0 15px 15px 15px;">
         <div class="comment-container horizontal start" style="width: 100%;">
             <div class="horizontal center">
                 <div (click)="like()" class="interaction-button" [ngClass]="{'like-button-unliked': !isLiked, 'like-button-liked': isLiked}"></div>
@@ -37,7 +79,7 @@
             <div style="flex: 1;"></div>
             <div class="horizontal end" style="width: 500px;">
                 <div class="profile-picture" [style]="'background-image: url(' + currentUser.photoUrl + ');'"></div>
-            <div #commentInput class="comment-input horizontal" placeholder="Write a comment..." (input)="comment=$event.target.textContent"
+            <div #commentInput class="input horizontal" placeholder="Write a comment..." (input)="comment=$event.target.textContent"
             contenteditable="true"></div>
             <div (click)="postComment()" class="send-button action-button"></div>
             </div>

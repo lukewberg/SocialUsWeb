@@ -1,7 +1,7 @@
 export interface Post {
     description: string;
     followerList: string[];
-    gameType: string;
+    gameType: 'tictactoe' | 'videoPost' | 'imagePost' | 'hangman' | 'truthordare';
     hashtags: string[];
     likes: string[];
     location: string;

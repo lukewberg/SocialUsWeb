@@ -88,14 +88,27 @@ export class UserService {
     });
   }
 
-  followUser(profile: User): Promise<void> {
+  followUser(id: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('insta_users').doc(profile.id).update({
+      this.fireStore.collection('insta_users').doc(id).update({
         followers: firestore.FieldValue.arrayUnion(this.authService.userFirestore.data().id)
       });
       console.log(this.authService.userFirestore.data().id);
       this.fireStore.collection('insta_users').doc(this.authService.userFirestore.data().id).update({
-        following: firestore.FieldValue.arrayUnion(profile.id)
+        following: firestore.FieldValue.arrayUnion(id)
+      }).then(() => {
+        resolve();
+      });
+    });
+  }
+
+  unfollowUser(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('insta_users').doc(id).update({
+        followers: firestore.FieldValue.arrayRemove(this.authService.userFirestore.data().id)
+      });
+      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.data().id).update({
+        following: firestore.FieldValue.arrayRemove(id)
       }).then(() => {
         resolve();
       });

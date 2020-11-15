@@ -49,7 +49,6 @@ export class AuthService {
         friendState: [],
         groups: [],
         id: user.user.uid,
-        photoUrl: '',
         userToken: [],
         username
       });

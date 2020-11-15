@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { User } from 'src/app/types/user';
 import { Post } from 'src/app/types/post';
+import { TicTacToePost } from 'src/app/types/ticTacToePost';
 import { PostService } from 'src/app/services/post.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-post',
@@ -11,15 +13,19 @@ import { PostService } from 'src/app/services/post.service';
 export class PostComponent implements OnInit {
 
   @Input() authorProfile: User;
-  @Input() post: Post;
+  @Input() post: Post & TicTacToePost;
   @Input() currentUser: User;
   @ViewChild('video') video: ElementRef;
   @ViewChild('commentInput') commentInput: ElementRef;
   @ViewChild('progressBar') progressBar: ElementRef;
   @ViewChild('scrubBar') scrubBar: ElementRef;
+  opponentProfile: User;
   comment: string;
   isLiked = false;
   isVideo: boolean;
+  isGame: boolean;
+  isTicTacToe: boolean;
+  gameSymbol = '';
   videoHeight: number;
   videoProgress = 0;
   videoIsToggled = false;
@@ -32,12 +38,27 @@ export class PostComponent implements OnInit {
     { divider: 1e6, suffix: 'M' },
     { divider: 1e3, suffix: 'K' }];
 
-  constructor(public postService: PostService) { }
+  constructor(public postService: PostService, public userService: UserService) { }
 
   ngOnInit(): void {
-    this.isVideo = this.post.gameType === 'videoPost' ? true : false;
-    if (this.post.likes.includes(this.currentUser.id)) {
-      this.isLiked = true;
+    this.isVideo = this.post.gameType === 'videoPost';
+    this.isGame = this.post.gameType !== 'imagePost' && this.post.gameType !== 'videoPost';
+    this.isTicTacToe = this.post.gameType === 'tictactoe';
+    if (this.isGame) {
+      this.userService.getUser(
+        this.post.playerOneId === this.authorProfile.id ? this.post.playerTwoId : this.post.playerOneId
+      ).then(result => {
+        this.opponentProfile = result.data() as User;
+      });
+    } else if (this.isGame && this.isTicTacToe) {
+      if (this.post.playerOneId === this.currentUser.id && this.post.turn % 2 === 0) {
+        this.gameSymbol = 'X';
+      } else if (this.post.playerTwoId === this.currentUser.id && this.post.turn % 2 !== 0) {
+        this.gameSymbol = 'O';
+      }
+    }
+    if (this.post.likes) {
+      this.isLiked = this.post.likes.includes(this.currentUser.id);
     }
   }
 
@@ -49,7 +70,7 @@ export class PostComponent implements OnInit {
     });
   }
 
-  formatNumber(n) {
+  formatNumber(n: number): string {
     if (n) {
       for (let i = 0; i < this.ranges.length; i++) {
         if (n >= this.ranges[i].divider) {

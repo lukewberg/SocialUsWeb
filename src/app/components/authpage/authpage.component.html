@@ -1,6 +1,6 @@
 <div class="auth-page vertical center">
     <div class="auth-container vertical space-between">
-        <div class="logo"></div>
+        <div *ngIf="!isCreateAccount" class="logo"></div>
         <div *ngIf="!isCreateAccount" class="form-container vertical center">
             <input [(ngModel)]="email" placeholder="Email Address..." type="text">
             <input (keypress)="signInReturn($event)" [(ngModel)]="password" placeholder="Password..." type="password">
@@ -14,10 +14,17 @@
             </div>
         </div>
         <div *ngIf="isCreateAccount" class="form-container vertical center">
+            <input (change)="loadProfilePicture($event)" id="profilePicUpload" type="file" style="opacity: 0; visibility: hidden; width: 0; height: 0; margin: 0; padding: 0;">
+            <label for="profilePicUpload">
+                <div class="profile-picture-container vertical center" [style]="'background-image: url(' + imagePreview + ');'">
+                <div class="action-button add-button"></div>
+            </div>
+            </label>
             <form [formGroup]="signUpForm">
-                <input for="email" formControlName="email" placeholder="Email Address..." type="text">
                 <input for="username" formControlName="username" placeholder="Username..." type="text">
                 <input for="displayName" formControlName="displayName" placeholder="Display Name..." type="text">
+                <div style="margin-bottom: 25px;"></div>
+                <input for="email" formControlName="email" placeholder="Email Address..." type="text">
                 <input for="password" formControlName="password" placeholder="Password..." type="password">
             </form>
             <div (click)="createAccount()" style="width: 100%;" class="horizontal center action-button">

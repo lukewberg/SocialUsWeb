@@ -112,8 +112,16 @@ export class ProfilepageComponent implements OnInit, OnDestroy {
   }
 
   followUser(): void {
-    this.userService.followUser(this.profile).then(() => {
+    this.userService.followUser(this.profile.id).then(() => {
       console.log('Followed User!');
+      this.isFollowing = true;
+    });
+  }
+
+  unfollowUser(): void {
+    this.userService.unfollowUser(this.profile.id).then(() => {
+      console.log('Unfollowed User!');
+      this.isFollowing = false;
     });
   }
 
@@ -138,7 +146,19 @@ export class ProfilepageComponent implements OnInit, OnDestroy {
         });
       });
     };
+  }
 
+  toggleProfileEdit(): void {
+    if (this.isSelf && this.isEditProfile) {
+      this.userService.updateProfile({
+        displayName: this.profile.displayName,
+        bio: this.profile.bio
+      }).then(() => {
+        this.isEditProfile = false;
+      });
+    } else {
+      this.isEditProfile = true;
+    }
   }
 
   ngOnDestroy(): void {

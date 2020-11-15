@@ -1,17 +1,34 @@
 .friends-pane {
     width: 350px;
     position: fixed;
-    right: 0;
-    top: 70px;
-    bottom: 0;
-    background-color: #fff;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
-    padding: 15px;
+    right: 20px;
+    top: 90px;
+    bottom: 20px;
     -ms-overflow-style: none;
     /* IE and Edge */
     scrollbar-width: none;
     /* Firefox */
     z-index: 1;
+}
+
+.friends-pane-container {
+    border-radius: 15px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    padding: 15px;
+    margin-bottom: 10px;
+    width: 100%;
+    min-height: 350px;
+    max-height: 500px;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    overflow-y: scroll;
+}
+
+.friends-pane-container::-webkit-scrollbar {
+  display: none;
 }
 
 .friends-pane::-webkit-scrollbar {
@@ -22,7 +39,7 @@
     font-family: LatoBlack;
     font-size: 24px;
     align-self: flex-start;
-    margin: 10px 0;
+    margin: 0 0 10px 0;
     user-select: none;
 }
 

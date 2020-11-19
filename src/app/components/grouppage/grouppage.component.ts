@@ -32,7 +32,7 @@ export class GrouppageComponent implements OnInit {
     if (!this.authService.userFirestore) {
       this.accountSubscription = this.authService.initializedEvent.subscribe(event => {
         if (event === 'initialized') {
-          this.user = this.authService.userFirestore.data() as User;
+          this.user = this.authService.userFirestore as User;
           this.init();
         }
       });

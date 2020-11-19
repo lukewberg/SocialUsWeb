@@ -5,6 +5,8 @@ import { Comment } from '../types/comment';
 import { User } from '../types/user';
 import { Like } from '../types/like';
 import { firestore } from 'firebase';
+import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch/lite';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +14,22 @@ import { firestore } from 'firebase';
 export class PostService {
 
   globalFeed: any[];
+  algoliaClient: SearchClient;
+  algoliaIndex: SearchIndex;
+  algoliaRequestOptions: any;
 
-  constructor(public fireStore: AngularFirestore) { }
+  constructor(public fireStore: AngularFirestore, public authService: AuthService) {
+    this.algoliaClient = algoliasearch('9DVS1LUIJR', 'fdb4bfd4329a2bd509392073cc64a865');
+    this.algoliaIndex = this.algoliaClient.initIndex('posts');
+
+    this.authService.initializedEvent.subscribe(result => {
+      if (result === 'initialized') {
+        this.algoliaRequestOptions = {
+          headers: { 'X-Algolia-UserToken': this.authService.userFirestore.id}
+        };
+      }
+    });
+  }
 
   /**
    * Get the posts to populate a users feed, based on a starting index.
@@ -23,7 +39,7 @@ export class PostService {
 
   getGlobalFeed(user: any): Promise<QuerySnapshot<DocumentData>> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('posts', ref => ref.where('ownerId', 'in', user.data().following)
+      this.fireStore.collection('posts', ref => ref.where('ownerId', 'in', user.following)
       .orderBy('timestamp', 'desc')
       .limitToLast(50))
       .get()
@@ -127,28 +143,22 @@ export class PostService {
     });
   }
 
-  search(searchString: string): Promise<any> {
+  search(searchString: string): Promise<any[]> {
     return new Promise(async (resolve, reject) => {
-      let payload = {
-        users: [],
-        posts: [],
-        hashtags: []
-      };
-      await this.fireStore.collection('insta_users', ref => ref.where('username', '==', searchString))
-      .get()
-      .subscribe(result => {
-        payload.users = result.docs;
-      }, error => {
-        reject(error);
-      });
-      await this.fireStore.collection('posts', ref => ref.where('description', '==', searchString))
-      .get()
-      .subscribe(result => {
-        payload.posts = result.docs;
-      }, error => {
-        reject(error);
-      });
-      resolve(payload);
+      this.algoliaClient.search([
+        {
+          indexName: 'insta_users',
+          query: searchString,
+          params: {
+            hitsPerPage: 30
+          }
+        }
+      ]).then(result => {
+        resolve(result.results);
+      })
+        .catch(error => {
+          reject(error);
+        });
     });
   }
 

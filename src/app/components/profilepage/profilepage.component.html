@@ -61,7 +61,7 @@
       </div>
       <div class="profile-post-container vertical start">
         <app-post *ngFor="let post of posts" [authorProfile]="profile" [post]="post"
-          [currentUser]="authService.userFirestore.data()"></app-post>
+          [currentUser]="authService.userFirestore"></app-post>
       </div>
     </div>
 </div>

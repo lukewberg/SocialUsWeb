@@ -1,3 +1,7 @@
+p {
+    margin-bottom: 10px;
+}
+
 .post-container {
     border-radius: 15px;
     background-color: #fff;
@@ -15,10 +19,12 @@
 }
 
 .profile-picture {
-    width: 45px;
-    height: 45px;
+    width: 55px;
+    height: 55px;
     border-radius: 100%;
     margin-right: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -28,14 +34,15 @@
 
 .profile-display-name {
     font-family: LatoBlack;
-    font-size: 17px;
+    color: #414141;
+    font-size: 20px;
     outline: none;
     cursor: pointer;
 }
 
 .post-content-box {
     width: 100%;
-    padding: 10px 15px 0 15px;
+    padding: 0 15px 0 15px;
 }
 
 .author-username {
@@ -239,6 +246,37 @@
     mask-position: center;
     width: 100px;
     height: 100px;
+}
+
+.profile-handle {
+    color: #4aabfa;
+    font-family: Lato;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.text-only-container {
+    padding: 10px 15px 10px 50px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin-top: 5px;
+}
+
+.text-only-content {
+    font-family: LatoBlack;
+    color: #414141;
+    font-size: 20px;
+    word-wrap: normal;
+}
+
+.text-only-sidebar {
+    background-color: #4aabfa;
+    border-radius: 10px;
+    height: 100%;
+    position: absolute;
+    left: 32px;
+    width: 4px;
 }
 
 @keyframes like-spin {

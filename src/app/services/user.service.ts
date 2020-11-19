@@ -34,7 +34,7 @@ export class UserService {
         }).catch(error => {
           console.log('Looks like there are no followers');
         });
-        this.getFriends(this.authService.userFirestore.data() as User).then(result => {
+        this.getFriends(this.authService.userFirestore as User).then(result => {
           this.friends = result;
         });
       }
@@ -62,7 +62,7 @@ export class UserService {
   getFollowing(): Promise<firestore.QueryDocumentSnapshot<firestore.DocumentData>[]> {
     return new Promise((resolve, reject) => {
       this.fireStore.collection('insta_users', ref => ref.where('id', 'in',
-      this.authService.userFirestore.data().following))
+      this.authService.userFirestore.following))
       .get()
       .subscribe(result => {
         resolve(result.docs);
@@ -89,12 +89,13 @@ export class UserService {
   }
 
   followUser(id: string): Promise<void> {
+    this.authService.userFirestore.following.push(id);
     return new Promise((resolve, reject) => {
       this.fireStore.collection('insta_users').doc(id).update({
-        followers: firestore.FieldValue.arrayUnion(this.authService.userFirestore.data().id)
+        followers: firestore.FieldValue.arrayUnion(this.authService.userFirestore.id)
       });
-      console.log(this.authService.userFirestore.data().id);
-      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.data().id).update({
+      console.log(this.authService.userFirestore.id);
+      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.id).update({
         following: firestore.FieldValue.arrayUnion(id)
       }).then(() => {
         resolve();
@@ -103,11 +104,12 @@ export class UserService {
   }
 
   unfollowUser(id: string): Promise<void> {
+    this.authService.userFirestore.following.splice(this.authService.userFirestore.following.indexOf(id), 1);
     return new Promise((resolve, reject) => {
       this.fireStore.collection('insta_users').doc(id).update({
-        followers: firestore.FieldValue.arrayRemove(this.authService.userFirestore.data().id)
+        followers: firestore.FieldValue.arrayRemove(this.authService.userFirestore.id)
       });
-      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.data().id).update({
+      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.id).update({
         following: firestore.FieldValue.arrayRemove(id)
       }).then(() => {
         resolve();
@@ -150,7 +152,7 @@ export class UserService {
 
   updateProfile(payload: object): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.data().id).update(payload)
+      this.fireStore.collection('insta_users').doc(this.authService.userFirestore.id).update(payload)
         .then(result => {
           resolve(result);
         }).catch(error => {

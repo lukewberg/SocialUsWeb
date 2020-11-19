@@ -18,7 +18,7 @@ export class ChatComponent implements OnInit {
   constructor(public authService: AuthService) {}
 
   ngOnInit(): void {
-    let self = this.authService.userFirestore.data();
+    let self = this.authService.userFirestore;
     let contentAuthorId = this.comment ? this.comment.userId : this.message ? this.message.userId : undefined;
     if (!this.authService.userFirestore) {
       this.accountSubscription = this.authService.initializedEvent.subscribe(event => {

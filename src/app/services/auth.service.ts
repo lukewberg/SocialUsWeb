@@ -11,18 +11,17 @@ import { User } from '../types/user';
 })
 export class AuthService {
   user: firebase.User;
-  userFirestore: firebase.firestore.DocumentData;
+  userFirestore: User;
   initializedEvent = new EventEmitter<string>(true);
 
   constructor(public auth: AngularFireAuth,
-              public fireStore: AngularFirestore,
-              public postService: PostService) {
+              public fireStore: AngularFirestore) {
                 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
                 auth.onAuthStateChanged(user => {
                   if (user) {
                     this.user = user;
                     this.getUserDocument(user).then(result => {
-                      this.userFirestore = result;
+                      this.userFirestore = result.data() as User;
                       this.initializedEvent.emit('initialized');
                     });
                   }

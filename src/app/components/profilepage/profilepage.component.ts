@@ -66,10 +66,10 @@ export class ProfilepageComponent implements OnInit, OnDestroy {
           .then(result => {
             this.profile = result.data() as User;
             console.log(this.profile);
-            this.isFollowing = this.authService.userFirestore.data().following.includes(this.profile.id);
+            this.isFollowing = this.authService.userFirestore.following.includes(this.profile.id);
             this.followerCount = this.profile.followers.length;
             this.followingCount = this.profile.following.length;
-            this.isSelf = this.profile.id === this.authService.userFirestore.data().id;
+            this.isSelf = this.profile.id === this.authService.userFirestore.id;
             this.getProfilePosts(uid);
             this.getProfileGroups();
             this.getProfileFriends();

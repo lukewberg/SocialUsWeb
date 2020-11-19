@@ -19,7 +19,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
   constructor(public postService: PostService, public authService: AuthService, public userService: UserService) { }
 
   ngOnInit(): void {
-    if (this.authService.userFirestore && this.authService.userFirestore.data().following.length > 0) {
+    if (this.authService.userFirestore && this.authService.userFirestore.following.length > 0) {
       this.getGlobalFeed();
     } else {
       this.authServiceInitialized = this.authService.initializedEvent.subscribe(result => {

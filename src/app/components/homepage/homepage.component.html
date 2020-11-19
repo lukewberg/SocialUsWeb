@@ -1,6 +1,6 @@
 <div style="padding-top: 70px;" class="horizontal center">
     <div class="vertical flex-start">
         <app-postmaker (newPost)="onNewPost($event)"></app-postmaker>
-        <app-post *ngFor="let post of postFeed" [post]="post" [authorProfile]="getPostUser(post)" [currentUser]="authService.userFirestore.data()"></app-post>
+        <app-post *ngFor="let post of postFeed" [post]="post" [authorProfile]="getPostUser(post)" [currentUser]="authService.userFirestore"></app-post>
     </div>
 </div>

@@ -1,4 +1,7 @@
 <div *ngIf="messageService.friendPaneEnabled" class="friends-pane vertical start">
+  <div class="overview-container">
+
+  </div>
   <div class="friends-pane-container">
     <span class="section-label">Friends</span>
     <div *ngFor="let friend of userService.friends" class="friend-container horizontal">
@@ -14,7 +17,7 @@
         <div [routerLink]="['/profile']" [queryParams]="{uid: thread?.profile?.id}" class="profile-picture"
           [style]="'background-image: url(' + thread.profile?.photoUrl + ');'"></div>
         <span class="friend-username">{{thread?.profile?.username }}</span>
-        <div (click)="openChat(thread?.profile?.id, thread.profile)" class="chat-button"></div>
+        <div (click)="openChat(thread?.profile?.id, thread.profile)" class="action-button chat-button"></div>
     </div>
   </div>
   <div *ngIf="chatOpen" class="chat-pane">

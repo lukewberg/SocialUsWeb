@@ -77,7 +77,7 @@ export class PostmakerComponent implements OnInit {
   }
 
   createPost(): void {
-    const user = this.authService.userFirestore.data();
+    const user = this.authService.userFirestore;
     const postObj: Post = {
       description: this.postContent,
       followerList: [],
@@ -85,7 +85,7 @@ export class PostmakerComponent implements OnInit {
       hashtags: [],
       likes: [],
       location: '',
-      mediaUrl: this.imageUrl,
+      mediaUrl: this.imageUrl ? this.imageUrl : '',
       ownerId: user.id,
       postId: '',
       timestamp: firestore.Timestamp.now(),

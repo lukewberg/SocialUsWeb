@@ -1,37 +1,50 @@
-<div class="header horizontal space-between">
-    <div class="logo-container">
-        <div [routerLink]="['']" class="logo"></div>
+<div class="header horizontal center">
+  <div class="logo-container">
+    <div [routerLink]="['']" class="logo"></div>
+  </div>
+  <div style="display: block; width: 650px;">
+    <div class="input horizontal" style="z-index: 1;">
+      <div style="flex: 1; height: 30px; outline: none; display: flex; align-items: center; padding: 0 10px;"
+        placeholder="Search for users and hashtags.." (input)="search(searchString=$event.target.textContent)"
+        contenteditable="true">
+      </div>
+      <div class="search-icn"></div>
     </div>
-    <div class="horizontal">
-      <div class="search-bar-container">
-        <input [(ngModel)]="searchString" placeholder="Search posts, users, and hashtags..." type="text"
-          class="search-bar">
-        <div class="search-results-container">
-          <div class="search-result"></div>
+  </div>
+  <div *ngIf="searchResults?.length > 0" class="search-results-container">
+      <div *ngFor="let result of searchResults[0]?.hits; let i = index" class="search-result horizontal start">
+        <div [routerLink]="['/profile']" [queryParams]="{uid: result?.objectID}" class="result-profile-picture" [style]="'background-image: url(' + result?.photoUrl + ');'"></div>
+        <div [routerLink]="['/profile']" [queryParams]="{uid: result?.objectID}" class="vertical" style="align-items: flex-start; outline: none;">
+          <span class="profile-display-name">{{result?.displayName}}</span>
+          <span class="profile-handle">@{{result?.username}}</span>
+        </div>
+        <div style="flex: 1;"></div>
+        <div (click)="authService.userFirestore.following.includes(result.objectID) ? unfollowUser(result.objectID, i) : followUser(result.objectID, i)"
+          class="action-button horizontal center"
+          [ngClass]="{'following': authService.userFirestore.following.includes(result.objectID)}">{{authService.userFirestore.following.includes(result.objectID) ? 'Following' : 'Follow'}}
+          <div *ngIf="authService.userFirestore.following.includes(result.objectID)" class="following-check-icn"></div>
         </div>
       </div>
-      <div (click)="search()" class="search-button"></div>
     </div>
-    <div class="horizontal center">
-      <div (mouseenter)="dropdownToggled = true" class="dropdown-container">
-        <div [routerLink]="['/profile']" [queryParams]="{uid: authService.userFirestore?.data().id}"
-          *ngIf="authService?.user" class="account-button horizontal start">
-          <div class="profile-picture"
-            [style]="'background-image: url(' + authService.userFirestore?.data()?.photoUrl + ');'"></div>
-          <span class="account-name">{{authService.userFirestore?.data()?.displayName}}</span>
-        </div>
-        <div (mouseleave)="dropdownToggled = false" *ngIf="dropdownToggled" class="dropdown vertical">
-          <div class="action-button horizontal center">
-            <span (click)="signOut()">Sign Out</span>
-          </div>
+  <div class="horizontal center account-container">
+    <div (mouseenter)="dropdownToggled = true" class="dropdown-container">
+      <div [routerLink]="['/profile']" [queryParams]="{uid: authService.userFirestore?.id}"
+        *ngIf="authService?.user" class="account-button horizontal start">
+        <div class="profile-picture"
+          [style]="'background-image: url(' + authService.userFirestore?.photoUrl + ');'"></div>
+        <span class="account-name">{{authService.userFirestore?.displayName}}</span>
+      </div>
+      <div (mouseleave)="dropdownToggled = false" *ngIf="dropdownToggled" class="dropdown vertical">
+        <div class="action-button horizontal center">
+          <span (click)="signOut()">Sign Out</span>
         </div>
       </div>
-        <div class="message-toggle"
-        (click)="messageService.friendPaneEnabled = !messageService.friendPaneEnabled"
-          [ngClass]="{'message-toggle-on': messageService.friendPaneEnabled, 'message-toggle-off': !messageService.friendPaneEnabled}">
-        </div>
     </div>
-    <!-- <div (click)="signOut()" class="signout-button">
+    <div class="message-toggle" (click)="messageService.friendPaneEnabled = !messageService.friendPaneEnabled"
+      [ngClass]="{'message-toggle-on': messageService.friendPaneEnabled, 'message-toggle-off': !messageService.friendPaneEnabled}">
+    </div>
+  </div>
+  <!-- <div (click)="signOut()" class="signout-button">
         Sign Out
     </div> -->
 </div>

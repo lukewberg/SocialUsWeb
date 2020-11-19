@@ -11,7 +11,8 @@
 
 .logo-container {
     display: block;
-    position: relative;
+    position: absolute;
+    left: 15px;
 }
 
 .logo {
@@ -24,7 +25,6 @@
     border-radius: 6px;
     outline: none;
     cursor: pointer;
-    margin-right: 182.33px;
 }
 
 .search-bar-container {
@@ -32,9 +32,6 @@
     position: relative;
     width: 450px;
     padding: 10px;
-    background-color: #fff;
-    border-radius: 6px;
-    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.25);
 }
 
 .search-bar {
@@ -143,4 +140,85 @@
     span {
         color: #fff;
     }
+}
+
+.search-icn {
+    mask-image: url('/assets/img/search-icn.png');
+    background-color: #4aabfa;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 10px;
+}
+
+.account-container {
+    position: absolute;
+    right: 15px;
+}
+
+.search-results-container {
+    width: 650px;
+    padding: 60px 15px 5px 10px;
+    border-radius: 15px;
+    background-color: #fff;
+    position: absolute;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    z-index: -1;
+    top: 25px;
+}
+
+.search-result {
+    margin-bottom: 10px;
+    border-radius: 15px;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    outline: none;
+}
+
+.result-profile-picture {
+    width: 55px;
+    height: 55px;
+    border-radius: 100%;
+    margin-right: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    outline: none;
+}
+
+.profile-handle {
+    color: #4aabfa;
+    font-family: Lato;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.profile-display-name {
+    font-family: LatoBlack;
+    color: #414141;
+    font-size: 20px;
+    outline: none;
+    cursor: pointer;
+}
+
+.following {
+    background-color: #E9E9E9;
+    color: #414141;
+    box-shadow: none;
+}
+
+.following-check-icn {
+  background: url('/assets/img/following-icn.png');
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-left: 10px;
 }

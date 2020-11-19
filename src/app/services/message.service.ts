@@ -31,7 +31,7 @@ export class MessageService {
   getThreads(): Promise<Thread[]> {
     return new Promise((resolve, reject) => {
       this.fireStore.collection('messages-test', ref =>
-      ref.where('members', 'array-contains', this.authService.userFirestore.data().id))
+      ref.where('members', 'array-contains', this.authService.userFirestore.id))
       .get()
       .subscribe(result => {
         const threads = [];
@@ -40,7 +40,7 @@ export class MessageService {
             const thread = doc.data() as Thread;
             thread.messages = messages.length > 0 ? messages : [];
             thread.id = doc.id;
-            this.authService.getUserDocument(undefined, doc.data().members.find(ref => ref !== this.authService.userFirestore.data().id))
+            this.authService.getUserDocument(undefined, doc.data().members.find(ref => ref !== this.authService.userFirestore.id))
             .then(user => {
               thread.profile = user.data() as User;
               threads.push(thread);
@@ -92,7 +92,7 @@ export class MessageService {
           groupChatName: chatName ? chatName : '',
           members: [
             id,
-            this.authService.userFirestore.data().id
+            this.authService.userFirestore.id
           ]
         }).then(result => {
           thread.get().subscribe(result => {
@@ -110,7 +110,7 @@ export class MessageService {
   }
 
   sendMessage(id: string, message: string, mediaUrl?: string): Promise<any> {
-    const self = this.authService.userFirestore.data() as User;
+    const self = this.authService.userFirestore as User;
     return new Promise((resolve, reject) => {
       this.fireStore.collection('messages-test').doc(id).collection('messages')
       .doc<Message>(this.fireStore.createId())

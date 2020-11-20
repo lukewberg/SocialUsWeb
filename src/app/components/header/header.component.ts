@@ -1,3 +1,4 @@
+import { ElementRef, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
@@ -11,9 +12,11 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./header.component.less']
 })
 export class HeaderComponent implements OnInit {
+  @ViewChild('searchInput') searchInput: ElementRef;
   searchString: string;
   dropdownToggled = false;
   searchResults = [];
+  isFocused = false;
 
   constructor(public authService: AuthService, public router: Router, public messageService: MessageService,
               public postService: PostService, public userService: UserService) { }
@@ -41,6 +44,7 @@ export class HeaderComponent implements OnInit {
       });
     } else {
       this.searchResults = [];
+      this.searchInput.nativeElement.placeholder = 'Search for users and hashtags...'
     }
   }
 

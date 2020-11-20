@@ -21,6 +21,7 @@ import { ProfilepageComponent } from './components/profilepage/profilepage.compo
 import { ProfileHeaderComponent } from './components/profile-header/profile-header.component';
 import { GrouppageComponent } from './components/grouppage/grouppage.component';
 import { ChatPaneComponent } from './components/chat-pane/chat-pane.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ChatPaneComponent } from './components/chat-pane/chat-pane.component';
     FormsModule,
     ReactiveFormsModule,
     AngularFireFunctionsModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    InfiniteScrollModule
   ],
   providers: [AngularFirestoreModule],
   bootstrap: [AppComponent]

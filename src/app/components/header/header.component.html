@@ -3,15 +3,15 @@
     <div [routerLink]="['']" class="logo"></div>
   </div>
   <div style="display: block; width: 650px;">
-    <div class="input horizontal" style="z-index: 1;">
-      <div style="flex: 1; height: 30px; outline: none; display: flex; align-items: center; padding: 0 10px;"
-        placeholder="Search for users and hashtags.." (input)="search(searchString=$event.target.textContent)"
+    <div class="horizontal" style="position: relative;">
+      <div #searchInput (focus)="isFocused = true" (focusout)="isFocused = false" class="input search-bar horizontal" style="flex: 1; outline: none; align-items: center;"
+        placeholder="Search for users and hashtags..." (input)="search(searchString=$event.target.textContent)"
         contenteditable="true">
       </div>
-      <div class="search-icn"></div>
+      <div contenteditable="false" class="search-icn"></div>
     </div>
   </div>
-  <div *ngIf="searchResults?.length > 0" class="search-results-container">
+  <div *ngIf="searchResults?.length > 0 && isFocused" class="search-results-container">
       <div *ngFor="let result of searchResults[0]?.hits; let i = index" class="search-result horizontal start">
         <div [routerLink]="['/profile']" [queryParams]="{uid: result?.objectID}" class="result-profile-picture" [style]="'background-image: url(' + result?.photoUrl + ');'"></div>
         <div [routerLink]="['/profile']" [queryParams]="{uid: result?.objectID}" class="vertical" style="align-items: flex-start; outline: none;">

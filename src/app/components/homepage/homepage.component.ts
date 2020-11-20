@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/types/user';
 import { Post } from 'src/app/types/post';
+import { QuerySnapshot } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-homepage',
@@ -32,15 +33,19 @@ export class HomepageComponent implements OnInit, OnDestroy {
 
   getGlobalFeed(): void {
     this.postService.getGlobalFeed(this.authService.userFirestore).then(result => {
-      result.docs.forEach(document => {
-        this.postService.getComments(document.id).then(async comments => {
-          const post = document.data();
-          post.comments = [];
-          comments.docs.forEach(comment => {
-            post.comments.push(comment.data());
-          });
-          this.postFeed.push(post);
+      this.getComments(result);
+    });
+  }
+
+  getComments(feed: QuerySnapshot<firebase.firestore.DocumentData>): void {
+    feed.docs.forEach(document => {
+      this.postService.getComments(document.id).then(async comments => {
+        const post = document.data();
+        post.comments = [];
+        comments.docs.forEach(comment => {
+          post.comments.push(comment.data());
         });
+        this.postFeed.push(post);
       });
     });
   }
@@ -57,6 +62,13 @@ export class HomepageComponent implements OnInit, OnDestroy {
 
   onNewPost(post: Post): void {
     this.postFeed.unshift(post);
+  }
+
+  loadMorePosts(): void {
+    console.log('LOADING MORE POSTS');
+    this.postService.getPaginatedGlobalFeed(this.authService.userFirestore).then(result => {
+      this.getComments(result);
+    });
   }
 
 }

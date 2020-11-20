@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 })
 export class PostService {
 
-  globalFeed: any[];
+  globalFeed: firestore.QueryDocumentSnapshot<firestore.DocumentData>[];
   algoliaClient: SearchClient;
   algoliaIndex: SearchIndex;
   algoliaRequestOptions: any;
@@ -33,7 +33,6 @@ export class PostService {
 
   /**
    * Get the posts to populate a users feed, based on a starting index.
-   * @param index the starting point for the next 30 posts
    * @returns Promise<Post[]>
    */
 
@@ -41,12 +40,33 @@ export class PostService {
     return new Promise((resolve, reject) => {
       this.fireStore.collection('posts', ref => ref.where('ownerId', 'in', user.following)
       .orderBy('timestamp', 'desc')
-      .limitToLast(50))
+      .limitToLast(30))
       .get()
       .subscribe(result => {
         this.globalFeed = result.docs;
         resolve(result);
       }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  getPaginatedGlobalFeed(user: any): Promise<QuerySnapshot<DocumentData>> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('posts')
+      .ref.where('ownerId', 'in', user.following)
+      .orderBy('timestamp', 'desc')
+      .limit(30)
+      .startAfter(this.globalFeed[this.globalFeed.length - 1])
+      .get()
+      .then(result => {
+        console.log(result.docs);
+        result.docs.forEach(doc => {
+          this.globalFeed.push(doc);
+        });
+        resolve(result);
+      })
+      .catch(error => {
         reject(error);
       });
     });
@@ -153,7 +173,7 @@ export class PostService {
             hitsPerPage: 30
           }
         }
-      ]).then(result => {
+      ], this.algoliaRequestOptions).then(result => {
         resolve(result.results);
       })
         .catch(error => {

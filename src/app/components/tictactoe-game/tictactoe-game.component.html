@@ -1,0 +1,40 @@
+<div class="tictactoe-container vertical center">
+        <div (click)="(post?.squareOne !== '' || post?.squareOne !== gameChar) && isTurn ? playTurn('squareOne') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareOne == 'X', 'o': post?.squareOne == 'O'}"></div>
+        </div>
+        <div (click)="(post?.squareTwo !== '' || post?.squareTwo !== gameChar) && isTurn ? playTurn('squareTwo') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareTwo == 'X', 'o': post?.squareTwo == 'O'}"></div>
+        </div>
+        <div (click)="(post?.squareThree !== '' || post?.squareThree !== gameChar) && isTurn ? playTurn('squareThree') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareThree == 'X', 'o': post?.squareThree == 'O'}"></div>
+        </div>
+        <div (click)="(post?.squareFour !== '' || post?.squareFour !== gameChar) && isTurn ? playTurn('squareFour') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareFour == 'X', 'o': post?.squareFour == 'O'}"></div>
+        </div>
+        <div (click)="(post?.squareFive !== '' || post?.squareFive !== gameChar) && isTurn ? playTurn('squareFive') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareFive == 'X', 'o': post?.squareFive == 'O'}"></div>
+        </div>
+        <div (click)="(post?.squareSix !== '' || post?.squareSix !== gameChar) && isTurn ? playTurn('squareSix') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareSix == 'X', 'o': post?.squareSix == 'O'}"></div>
+        </div>
+        <div (click)="(post?.squareSeven !== '' || post?.squareSeven !== gameChar) && isTurn ? playTurn('squareSeven') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareSeven == 'X', 'o': post?.squareSeven == 'O'}"></div>
+        </div>
+        <div (click)="(post?.squareEight !== '' || post?.squareEight !== gameChar) && isTurn ? playTurn('squareEight') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareEight == 'X', 'o': post?.squareEight == 'O'}"></div>
+        </div>
+        <div (click)="(post?.squareNine !== '' || post?.squareNine !== gameChar) && isTurn ? playTurn('squareNine') : undefined" class="square vertical center">
+            <div [ngClass]="{'x': post?.squareNine == 'X', 'o': post?.squareNine == 'O'}"></div>
+        </div>
+    </div>
+    <div class="tictactoe-game-info-container horizontal center">
+        <div class="player-container horizontal center" [ngClass]="{'player-turn': !isTurn}">
+            <div class="profile-picture" [style]="'background-image: url(' + authorProfile?.photoUrl + ');'"></div>
+            <span class="profile-display-name">{{authorProfile?.displayName}}</span>
+        </div>
+        <span style="margin: 0 20px; font-family: LatoBlack; font-size: 18px;">VS</span>
+        <div class="player-container horizontal center" [ngClass]="{'player-turn': isTurn}">
+            <div class="profile-picture" [style]="'background-image: url(' + opponentProfile?.photoUrl + ');'"></div>
+            <span class="profile-display-name">{{opponentProfile?.displayName}}</span>
+        </div>
+    </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { Thread } from 'src/app/types/thread';
 import { User } from 'src/app/types/user';
@@ -13,10 +14,19 @@ export class FriendsPaneComponent implements OnInit {
   currentChat: Thread;
   chatOpen = false;
   chatRecipient: User;
+  isAuthenticated: boolean;
 
-  constructor(public userService: UserService, public messageService: MessageService) {}
+  constructor(public userService: UserService, public messageService: MessageService, public authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.initializedEvent.subscribe(result => {
+      if (result === 'initialized') {
+        this.isAuthenticated = true;
+      } else {
+        this.isAuthenticated = false;
+      }
+    });
+  }
 
   openChat(id: string, recipient: User): void {
     this.chatRecipient = recipient;

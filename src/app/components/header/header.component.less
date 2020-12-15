@@ -36,7 +36,7 @@
 
 .search-bar {
     display: flex;
-    width: 100%;
+    width: 680px;
     outline: none;
     border: none;
     font-family: LatoBold;
@@ -53,52 +53,64 @@
     box-shadow: 0px 1px 7px rgba(0, 0, 0, 0.25);
 }
 
-.account-button {
-    border-radius: 6px;
+.header-nav-button {
+    background-position: center;
+    background-size: 70%;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    width: 50px;
     height: 50px;
-    background-color: #fff;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
-    padding: 10px 13px;
-    align-items: center;
-    justify-self: flex-end;
     cursor: pointer;
+    transition: all .25s ease;
     outline: none;
+}
+
+.header-nav-button:hover {
+    transform: scale(1.01);
+    background-color: #cbe7ff;
+}
+
+.home {
+    background-image: url('/assets/img/home-icn.png');
+}
+
+.profile {
+    //background-image: url('/assets/img/user-icn.png');
+}
+
+.message {
+    background-image: url(/assets/img/chat-icn-blue.png);
+    background-size: 65%;
+    margin-left: 15px;
+    margin-right: 10px;
+}
+
+.notifications {
+    background-image: url('/assets/img/bell-blue-icn.png');
+    margin-right: 15px;
+    margin-left: 10px;
+}
+
+.nav-selected {
+    transform: scale(1.01);
+    background-color: #cbe7ff;
 }
 
 .profile-picture {
     width: 40px;
     height: 40px;
     border-radius: 100%;
+    border: 2px solid #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
     background-position: center;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
-    margin-right: 10px;
 }
 
 .account-name {
     font-family: LatoBlack;
     font-size: 18px;
     user-select: none;
-}
-
-.message-toggle {
-    width: 50px;
-    height: 50px;
-    border-radius: 6px;
-    background: url('/assets/img/chat-icn-blue.png');
-    background-position: center;
-    background-size: 60%;
-    background-repeat: no-repeat;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-.message-toggle-on {
-    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.25);
-}
-
-.message-toggle-off {
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
 }
 
 .search-button {
@@ -167,8 +179,8 @@
 }
 
 .account-container {
-    position: absolute;
-    right: 15px;
+    margin-left: 25px;
+    width: 300px;
 }
 
 .search-results-container {
@@ -179,7 +191,8 @@
     position: absolute;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
     z-index: -1;
-    top: 25px;
+    top: 5px;
+    left: 30px;
 }
 
 .search-result {
@@ -234,4 +247,10 @@
   background-position: center;
   background-repeat: no-repeat;
   margin-left: 10px;
+}
+
+.results-category-label {
+    color: #414141;
+    font-family: LatoBlack;
+    font-size: 16px;
 }

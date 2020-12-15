@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, Input } from '@angular/core';
 import { PostService } from '../../services/post.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
@@ -24,6 +24,7 @@ export class PostmakerComponent implements OnInit {
   videoPreview: SafeUrl;
   docRef: UploadTaskSnapshot;
   @Output() newPost = new EventEmitter<Post>();
+  @Input() collection: string;
   @ViewChild('postInput') postInput: ElementRef;
 
   constructor(public postService: PostService,
@@ -91,7 +92,7 @@ export class PostmakerComponent implements OnInit {
       timestamp: firestore.Timestamp.now(),
       username: user.username,
     };
-    this.postService.createPost(postObj).then(result => {
+    this.postService.createPost(postObj, this.collection).then(result => {
       postObj.postId = result;
       this.newPost.emit(postObj);
       this.cleanFields();

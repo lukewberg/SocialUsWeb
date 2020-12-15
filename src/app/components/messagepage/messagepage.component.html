@@ -1,0 +1,13 @@
+<div class="message-page vertical center">
+    <div class="message-pane-container horizontal">
+        <div class="vertical thread-list">
+            <div *ngFor="let thread of threads" class="thread-item horizontal start">
+                <div class="profile-picture" [style]="'background-image: url(' + thread?.profile?.photoUrl + ');'"></div>
+                <div class="vertical" style="align-items: flex-start;">
+                    <span class="display-name">{{thread?.profile?.displayName}}</span>
+                    <span class="message-preview">{{thread?.messages[0]?.message}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

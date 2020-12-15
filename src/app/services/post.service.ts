@@ -14,6 +14,7 @@ import { AuthService } from './auth.service';
 export class PostService {
 
   globalFeed: firestore.QueryDocumentSnapshot<firestore.DocumentData>[];
+  hashtagFeed: firestore.QueryDocumentSnapshot<firestore.DocumentData>[];
   algoliaClient: SearchClient;
   algoliaIndex: SearchIndex;
   algoliaRequestOptions: any;
@@ -25,7 +26,7 @@ export class PostService {
     this.authService.initializedEvent.subscribe(result => {
       if (result === 'initialized') {
         this.algoliaRequestOptions = {
-          headers: { 'X-Algolia-UserToken': this.authService.userFirestore.id}
+          headers: { 'X-Algolia-UserToken': this.authService.userFirestore.id }
         };
       }
     });
@@ -135,11 +136,11 @@ export class PostService {
     });
   }
 
-  createPost(post: Post): Promise<string> {
+  createPost(post: Post, collection: string = 'posts'): Promise<string> {
     return new Promise((resolve, reject) => {
       const postId = this.fireStore.createId();
       post.postId = postId;
-      this.fireStore.collection('posts').doc(postId)
+      this.fireStore.collection(collection).doc(postId)
       .set(post)
       .then(result => {
         resolve(postId);
@@ -167,10 +168,17 @@ export class PostService {
     return new Promise(async (resolve, reject) => {
       this.algoliaClient.search([
         {
-          indexName: 'insta_users',
+          indexName: 'users',
           query: searchString,
           params: {
             hitsPerPage: 30
+          }
+        },
+        {
+          indexName: 'groups',
+          query: searchString,
+          params: {
+            hitsPerPage: 10
           }
         }
       ], this.algoliaRequestOptions).then(result => {
@@ -182,15 +190,63 @@ export class PostService {
     });
   }
 
-  getGroupPosts(gid: string): Promise<firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[]> {
+  getGroupPosts(gid: string): Promise<firestore.QuerySnapshot<firestore.DocumentData>> {
     return new Promise((resolve, reject) => {
       this.fireStore.collection('groups').doc(gid).collection('group_posts', ref => ref.orderBy('timestamp', 'asc').limitToLast(30))
       .get()
       .subscribe(result => {
-        resolve(result.docs);
+        resolve(result);
       }, error => {
         reject(error);
       });
+    });
+  }
+
+  getTrendingHashtags(): Promise<firestore.QuerySnapshot<firestore.DocumentData>> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('hashtags', ref => ref.orderBy('rank', 'desc').limit(10))
+      .get()
+      .subscribe(result => {
+        resolve(result);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  getHashtagPosts(hashtag: string): Promise<firestore.QuerySnapshot<firestore.DocumentData>> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('posts', ref => ref.where('hashtags', 'array-contains-any', [hashtag])
+      .orderBy('timestamp', 'desc')
+      .limit(30))
+      .get()
+      .subscribe(result => {
+        this.hashtagFeed = result.docs;
+        resolve(result);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  getPaginatedHashtagPosts(hashtag: string): Promise<QuerySnapshot<DocumentData>> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('posts')
+        .ref.where('hashtags', 'array-contains-any', [hashtag])
+        .orderBy('timestamp', 'desc')
+        .limit(30)
+        .startAfter(this.hashtagFeed[this.hashtagFeed.length - 1])
+        .get()
+        .then(result => {
+          console.log(result.docs);
+          result.docs.forEach(doc => {
+            this.hashtagFeed.push(doc);
+          });
+          resolve(result);
+        })
+        .catch(error => {
+          reject(error);
+        });
     });
   }
 }

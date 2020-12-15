@@ -21,8 +21,8 @@
                   contenteditable="true"></div>
                   <span *ngIf="!isEditProfile" class="profile-display-name">{{profile?.displayName}}</span>
                   <div *ngIf="!isEditProfile" style="flex: 1;"></div>
-                  <div class="hidden-button social-stats-container">{{followerCount + (followerCount !== 1 ? ' followers' : ' follower')}}</div>
-                  <div class="hidden-button social-stats-container">{{followingCount + ' following'}}</div>
+                  <div class="hidden-button social-stats-container">{{followerCount + (followerCount - 1 !== 1 ? ' followers' : ' follower')}}</div>
+                  <div class="hidden-button social-stats-container">{{followingCount - 1 + ' following'}}</div>
                   <div *ngIf="!isSelf" (click)="isFollowing ? unfollowUser() : followUser()" class="action-button horizontal center"
                     [ngClass]="{'following' : isFollowing}">
                     {{isFollowing ? 'Following' : 'Follow'}}

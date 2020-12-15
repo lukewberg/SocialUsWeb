@@ -4,6 +4,7 @@ export interface Group {
     creatorId: string;
     groupName: string;
     isPrivate: boolean;
-    members: object;
+    members: any[];
     about: string;
+    admins: string[];
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DocumentReference } from '@angular/fire/firestore';
+import { DocumentReference, QuerySnapshot } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -21,6 +21,7 @@ export class GrouppageComponent implements OnInit {
   accountSubscription: Subscription;
   user: User;
   groupMembers = [];
+  groupAdmins = [];
   gid: string;
   isMember = false;
   posts = [];
@@ -37,6 +38,7 @@ export class GrouppageComponent implements OnInit {
         }
       });
     } else {
+      this.user = this.authService.userFirestore as User;
       this.init();
     }
   }
@@ -48,30 +50,48 @@ export class GrouppageComponent implements OnInit {
       this.userService.getGroup(gid).then(result => {
         this.group = result.data() as Group;
         this.groupRef = result.ref;
-        Object.keys(this.group.members).forEach(member => {
-          this.userService.getUser(member).then(result => {
+        this.group.members.forEach(member => {
+          console.log(member.userId);
+          this.userService.getUser(member.userId).then(result => {
             this.groupMembers.push(result.data());
+            if (member.userId === this.user.id) {
+              this.isMember = true;
+              console.log('You are a member!')
+            }
           });
-        });
-        console.log(this.group);
-        this.isMember = this.groupMembers.includes(this.user.id);
+        })
+        this.group.admins.forEach(admin => {
+          console.log(admin);
+          this.userService.getUser(admin).then(result => {
+            this.groupAdmins.push(result.data())
+          })
+        })
       }).finally(() => {
         this.getPosts();
       });
     });
   }
 
+  getComments(feed: QuerySnapshot<firebase.firestore.DocumentData>): void {
+    feed.docs.forEach(document => {
+      this.postService.getComments(document.id).then(async comments => {
+        const post = document.data();
+        post.comments = [];
+        comments.docs.forEach(comment => {
+          post.comments.push(comment.data());
+        });
+        this.posts.push(post);
+      });
+    });
+  }
+
   getPosts(): void {
     this.postService.getGroupPosts(this.gid).then(result => {
-      if (result.length > 0) {
+      if (result.docs.length > 0) {
         if (this.isMember) {
-          result.forEach(post => {
-            this.posts.push(post.data() as Post);
-          });
-          console.log(this.posts);
+          this.getComments(result);
         } else {
           this.posts.push(result[0].data() as Post);
-          console.log(this.posts);
         }
       }
     });
@@ -79,6 +99,16 @@ export class GrouppageComponent implements OnInit {
 
   getPostUser(post: Post): User {
     return this.groupMembers.find(user => user.id === post.ownerId);
+  }
+
+  joinGroup(): void {
+    this.userService.joinGroup(this.gid).then(() => {
+      this.isMember = true;
+    });
+  }
+
+  onNewPost(post: Post): void {
+    this.posts.unshift(post);
   }
 
 }

@@ -2,46 +2,59 @@
   <div class="logo-container">
     <div [routerLink]="['']" class="logo"></div>
   </div>
-  <div style="display: block; width: 650px;">
+  <div class="horizontal">
     <div class="horizontal" style="position: relative;">
-      <div #searchInput (focus)="isFocused = true" (focusout)="isFocused = false" class="input search-bar horizontal" style="flex: 1; outline: none; align-items: center;"
-        placeholder="Search for users and hashtags..." (input)="search(searchString=$event.target.textContent)"
-        contenteditable="true">
+      <div #searchInput (focus)="isFocused = true" (focusout)="closeResults()" class="input search-bar horizontal"
+        style="flex: 1; outline: none; align-items: center;" placeholder="Search for users, groups and hashtags..."
+        (input)="search(searchString=$event.target.textContent)" contenteditable="true">
       </div>
       <div contenteditable="false" class="search-icn"></div>
+      <div *ngIf="searchResults?.length > 0 && isFocused" class="search-results-container">
+    <div style="margin-top: 5px; margin-bottom: 10px;">
+      <span *ngIf="searchResults[0]?.hits?.length > 0" class="results-category-label">People</span>
+    </div>
+    <div *ngFor="let result of searchResults[0]?.hits; let i = index" class="search-result horizontal start">
+      <div [routerLink]="['/profile']" [queryParams]="{uid: result?.objectID}" class="result-profile-picture"
+        [style]="'background-image: url(' + result?.photoUrl + ');'"></div>
+      <div [routerLink]="['/profile']" [queryParams]="{uid: result?.objectID}" class="vertical"
+        style="align-items: flex-start; outline: none;">
+        <span class="profile-display-name">{{result?.displayName}}</span>
+        <span class="profile-handle">@{{result?.username}}</span>
+      </div>
+      <div style="flex: 1;"></div>
+      <div
+        (click)="authService.userFirestore.following.includes(result.objectID) ? unfollowUser(result.objectID, i) : followUser(result.objectID, i)"
+        class="action-button horizontal center"
+        [ngClass]="{'following': authService.userFirestore.following.includes(result.objectID)}">
+        {{authService.userFirestore.following.includes(result.objectID) ? 'Following' : 'Follow'}}
+        <div *ngIf="authService.userFirestore.following.includes(result.objectID)" class="following-check-icn"></div>
+      </div>
+    </div>
+    <div style="margin-top: 5px; margin-bottom: 10px;">
+      <span *ngIf="searchResults[1]?.hits?.length > 0" class="results-category-label">Groups</span>
+    </div>
+    <div *ngFor="let result of searchResults[1]?.hits; let i = index" class="search-result horizontal start">
+      <div [routerLink]="['/group']" [queryParams]="{gid: result?.objectID}" class="result-profile-picture"
+        [style]="'background-image: url(' + result?.backgroundUrl + ');'"></div>
+      <div [routerLink]="['/group']" [queryParams]="{gid: result?.objectID}" class="vertical"
+        style="align-items: flex-start; outline: none;">
+        <span class="profile-display-name">{{result?.groupName}}</span>
+      </div>
+      <div style="flex: 1;"></div>
     </div>
   </div>
-  <div *ngIf="searchResults?.length > 0 && isFocused" class="search-results-container">
-      <div *ngFor="let result of searchResults[0]?.hits; let i = index" class="search-result horizontal start">
-        <div [routerLink]="['/profile']" [queryParams]="{uid: result?.objectID}" class="result-profile-picture" [style]="'background-image: url(' + result?.photoUrl + ');'"></div>
-        <div [routerLink]="['/profile']" [queryParams]="{uid: result?.objectID}" class="vertical" style="align-items: flex-start; outline: none;">
-          <span class="profile-display-name">{{result?.displayName}}</span>
-          <span class="profile-handle">@{{result?.username}}</span>
-        </div>
-        <div style="flex: 1;"></div>
-        <div (click)="authService.userFirestore.following.includes(result.objectID) ? unfollowUser(result.objectID, i) : followUser(result.objectID, i)"
-          class="action-button horizontal center"
-          [ngClass]="{'following': authService.userFirestore.following.includes(result.objectID)}">{{authService.userFirestore.following.includes(result.objectID) ? 'Following' : 'Follow'}}
-          <div *ngIf="authService.userFirestore.following.includes(result.objectID)" class="following-check-icn"></div>
-        </div>
-      </div>
     </div>
-  <div class="horizontal center account-container">
-    <div (mouseenter)="dropdownToggled = true" class="dropdown-container">
+    <div class="horizontal end account-container">
+      <div [routerLink]="['/']" class="header-nav-button home" [ngClass]="{'nav-selected': currentUrlPath === '/'}">
+      </div>
+      <div [routerLink]="['/messages']" class="header-nav-button message"
+        [ngClass]="{'nav-selected': currentUrlPath === '/messages'}">
+      </div>
+      <div class="header-nav-button notifications"></div>
       <div [routerLink]="['/profile']" [queryParams]="{uid: authService.userFirestore?.id}"
-        *ngIf="authService?.user" class="account-button horizontal start">
-        <div class="profile-picture"
-          [style]="'background-image: url(' + authService.userFirestore?.photoUrl + ');'"></div>
-        <span class="account-name">{{authService.userFirestore?.displayName}}</span>
+        class="header-nav-button profile vertical center" [ngClass]="{'nav-selected': currentUrlPath === '/profile'}">
+        <div class="profile-picture" [style]="'background-image: url(' + authService?.userFirestore?.photoUrl + ');'"></div>
       </div>
-      <div (mouseleave)="dropdownToggled = false" *ngIf="dropdownToggled" class="dropdown vertical">
-        <div class="action-button horizontal center">
-          <span (click)="signOut()">Sign Out</span>
-        </div>
-      </div>
-    </div>
-    <div class="message-toggle" (click)="messageService.friendPaneEnabled = !messageService.friendPaneEnabled"
-      [ngClass]="{'message-toggle-on': messageService.friendPaneEnabled, 'message-toggle-off': !messageService.friendPaneEnabled}">
     </div>
   </div>
   <!-- <div (click)="signOut()" class="signout-button">

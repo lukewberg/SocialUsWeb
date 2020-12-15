@@ -22,6 +22,8 @@ import { ProfileHeaderComponent } from './components/profile-header/profile-head
 import { GrouppageComponent } from './components/grouppage/grouppage.component';
 import { ChatPaneComponent } from './components/chat-pane/chat-pane.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MessagepageComponent } from './components/messagepage/messagepage.component';
+import { TictactoeGameComponent } from './components/tictactoe-game/tictactoe-game.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     ProfileHeaderComponent,
     GrouppageComponent,
     ChatPaneComponent,
+    MessagepageComponent,
+    TictactoeGameComponent,
   ],
   imports: [
     BrowserModule,

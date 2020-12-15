@@ -30,7 +30,7 @@ export class MessageService {
 
   getThreads(): Promise<Thread[]> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('messages-test', ref =>
+      this.fireStore.collection('messages', ref =>
       ref.where('members', 'array-contains', this.authService.userFirestore.id))
       .get()
       .subscribe(result => {
@@ -87,7 +87,7 @@ export class MessageService {
   createThread(id: string, chatName?: string): Promise<Thread> {
     const chatId = this.fireStore.createId();
     return new Promise((resolve, reject) => {
-      const thread = this.fireStore.collection('messages-test').doc<Thread>(chatId);
+      const thread = this.fireStore.collection('messages').doc<Thread>(chatId);
       thread.set({
           groupChatName: chatName ? chatName : '',
           members: [
@@ -112,7 +112,7 @@ export class MessageService {
   sendMessage(id: string, message: string, mediaUrl?: string): Promise<any> {
     const self = this.authService.userFirestore as User;
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('messages-test').doc(id).collection('messages')
+      this.fireStore.collection('messages').doc(id).collection('messages')
       .doc<Message>(this.fireStore.createId())
       .set({
         userId: self.id,

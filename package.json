@@ -3,9 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build-prod": "ng build --prod",
+    "start-dev": "ng serve --configuration=development",
+    "start-pre-release": "ng serve --configuration=pre-release",
+    "start-QA": "ng serve",
+    "start-prod": "ng serve --configuration=production",
+    "build-dev": "ng build --configuration=development --progress",
+    "build-pre-release": "ng build --configuration=pre-release --progress",
+    "build-QA": "ng build --progress",
+    "build-prod": "ng build --prod --progress",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

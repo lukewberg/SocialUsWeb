@@ -1,6 +1,7 @@
 import { ElementRef, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PostService } from 'src/app/services/post.service';
@@ -17,16 +18,29 @@ export class HeaderComponent implements OnInit {
   dropdownToggled = false;
   searchResults = [];
   isFocused = false;
+  isAuthenticated: boolean;
+  routerEvents: Subscription;
+  currentUrlPath = '';
 
   constructor(public authService: AuthService, public router: Router, public messageService: MessageService,
               public postService: PostService, public userService: UserService) { }
 
   ngOnInit(): void {
-    // this.authService.initializedEvent.subscribe(result => {
-    //   if (result === 'initialized') {
-        
-    //   }
-    // });
+    this.authService.initializedEvent.subscribe(result => {
+      if (result === 'initialized') {
+        this.isAuthenticated = true;
+      } else {
+        this.isAuthenticated = false;
+      }
+    });
+
+    this.routerEvents = this.router.events.subscribe((event: NavigationEnd) => {
+      if (event instanceof NavigationEnd) {
+        console.log(event);
+        this.currentUrlPath = event.url.split('?')[0];
+        console.log(this.currentUrlPath);
+      }
+    });
   }
 
   signOut(): void {
@@ -58,6 +72,12 @@ export class HeaderComponent implements OnInit {
     this.userService.unfollowUser(id).then(() => {
       this.searchResults[0].hits[index].isFollowing = false;
     });
+  }
+
+  closeResults(): void {
+    setTimeout(() => {
+      this.isFocused = false
+    }, 300);
   }
 
 }

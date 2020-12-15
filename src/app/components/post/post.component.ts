@@ -4,6 +4,7 @@ import { Post } from 'src/app/types/post';
 import { TicTacToePost } from 'src/app/types/ticTacToePost';
 import { PostService } from 'src/app/services/post.service';
 import { UserService } from 'src/app/services/user.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-post',
@@ -33,6 +34,7 @@ export class PostComponent implements OnInit {
   scrubPositionX = 0;
   pointerInScrub = false;
   isMouseDown = false;
+  moment = moment;
   ranges = [
     { divider: 1e9, suffix: 'B' },
     { divider: 1e6, suffix: 'M' },
@@ -62,6 +64,12 @@ export class PostComponent implements OnInit {
     }
   }
 
+  parseUsernameMentions(description: string): string {
+    return description.replace(/[@]+[A-Za-z0-9-_]+/g, (u): string => {
+      return `<span class="profile-handle">${u}</span>`;
+    });
+  }
+
   postComment(): void {
     this.postService.postComment(this.currentUser, this.comment, this.post).then(result => {
       this.post.comments.push(result);
@@ -74,7 +82,7 @@ export class PostComponent implements OnInit {
     if (n) {
       for (let i = 0; i < this.ranges.length; i++) {
         if (n >= this.ranges[i].divider) {
-          return (n / this.ranges[i].divider).toString() + this.ranges[i].suffix;
+          return Math.floor(n / this.ranges[i].divider).toString() + this.ranges[i].suffix;
         }
       }
       return n.toString();

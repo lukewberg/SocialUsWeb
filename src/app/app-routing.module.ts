@@ -5,6 +5,7 @@ import { AngularFireAuthGuard, loggedIn, redirectUnauthorizedTo, canActivate } f
 import { AuthpageComponent } from './components/authpage/authpage.component';
 import { ProfilepageComponent } from './components/profilepage/profilepage.component';
 import { GrouppageComponent } from './components/grouppage/grouppage.component';
+import { MessagepageComponent } from './components/messagepage/messagepage.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['authenticate']);
 
@@ -12,7 +13,8 @@ const routes: Routes = [
   { path: '', component: HomepageComponent, ...canActivate(redirectUnauthorizedToLogin) },
   { path: 'profile', component: ProfilepageComponent },
   { path: 'group', component: GrouppageComponent },
-  { path: 'authenticate', component: AuthpageComponent }
+  { path: 'authenticate', component: AuthpageComponent },
+  { path: 'messages', component: MessagepageComponent }
 ];
 
 @NgModule({

@@ -39,7 +39,7 @@ export class AuthService {
   signUp(email: string, password: string, username: string, displayName: string): Promise<void> {
     return this.auth.createUserWithEmailAndPassword(email, password).then(user => {
       this.user = user.user;
-      return this.fireStore.collection('insta_users').doc(user.user.uid).set({
+      return this.fireStore.collection('users').doc(user.user.uid).set({
         bio: '',
         displayName,
         email,
@@ -81,7 +81,7 @@ export class AuthService {
 
   getUserDocument(user?: firebase.User, uid?: string): Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>> {
     return new Promise((resolve, reject) => {
-      this.fireStore.collection('insta_users').doc(user ? user.uid : uid ? uid : this.user.uid).get().subscribe(result => {
+      this.fireStore.collection('users').doc(user ? user.uid : uid ? uid : this.user.uid).get().subscribe(result => {
         resolve(result);
       }, error => {
         reject(error);

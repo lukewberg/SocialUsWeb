@@ -1,9 +1,28 @@
-<div style="padding-top: 70px;" class="horizontal center">
-    <div infinite-scroll
-    [infiniteScrollDistance]="2"
-    [infiniteScrollThrottle]="500"
-    (scrolled)="loadMorePosts()" class="vertical flex-start">
-        <app-postmaker (newPost)="onNewPost($event)"></app-postmaker>
-        <app-post *ngFor="let post of postFeed" [post]="post" [authorProfile]="getPostUser(post)" [currentUser]="authService.userFirestore"></app-post>
+<div style="padding-top: 70px; align-items: flex-start;" class="horizontal center">
+  <div infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500" (scrolled)="isHashtagView ? loadMoreHashtagPosts() : loadMorePosts()"
+    class="vertical flex-start">
+    <app-postmaker (newPost)="onNewPost($event)"></app-postmaker>
+    <div *ngIf="isHashtagView" class="selected-hashtag-container horizontal">
+      <div class="action-button hashtag-back-button" (click)="isHashtagView = false;"></div>
+      <span class="selected-hashtag">{{selectedHashtag?.id}}</span>
+      <div style="flex: 1;"></div>
+      <span class="hashtag-count" style="font-size: 18px;">{{formatNumber(selectedHashtag.count)}} {{selectedHashtag?.count > 1 ? 'posts' : 'post'}}</span>
     </div>
+    <app-post *ngFor="let post of isHashtagView ? hashtagFeed : postFeed" [post]="post" [authorProfile]="getPostUser(post)"
+      [currentUser]="authService.userFirestore"></app-post>
+  </div>
+  <div class="side-panel">
+      <div class="profile-preview-container"></div>
+    <div class="side-container">
+      <div class="horizontal" style="width: 100%;">
+        <span class="section-label">Trending</span>
+      </div>
+      <div class="horizontal" style="flex-wrap: wrap; justify-content: flex-start;">
+        <div *ngFor="let hashtag of hashtags; let i = index;" (click)="loadHashtagPosts(hashtag.id, i)" class="hashtag vertical">
+          <span>{{i+1}}: {{hashtag?.id}}</span>
+          <span class="hashtag-count">{{formatNumber(hashtag.count)}} {{hashtag?.count > 1 ? 'posts' : 'post'}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

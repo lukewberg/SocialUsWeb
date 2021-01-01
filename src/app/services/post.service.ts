@@ -7,6 +7,7 @@ import { Like } from '../types/like';
 import { firestore } from 'firebase';
 import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch/lite';
 import { AuthService } from './auth.service';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class PostService {
   algoliaIndex: SearchIndex;
   algoliaRequestOptions: any;
 
-  constructor(public fireStore: AngularFirestore, public authService: AuthService) {
+  constructor(public fireStore: AngularFirestore, public authService: AuthService, private storage: AngularFireStorage) {
     this.algoliaClient = algoliasearch('9DVS1LUIJR', 'fdb4bfd4329a2bd509392073cc64a865');
     this.algoliaIndex = this.algoliaClient.initIndex('posts');
 
@@ -171,14 +172,14 @@ export class PostService {
           indexName: 'users',
           query: searchString,
           params: {
-            hitsPerPage: 30
+            hitsPerPage: 7
           }
         },
         {
           indexName: 'groups',
           query: searchString,
           params: {
-            hitsPerPage: 10
+            hitsPerPage: 7
           }
         }
       ], this.algoliaRequestOptions).then(result => {
@@ -247,6 +248,21 @@ export class PostService {
         .catch(error => {
           reject(error);
         });
+    });
+  }
+
+  deletePost(postId: string, imageURL: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      await this.storage.storage.refFromURL(imageURL).delete();
+      await this.fireStore.collection('posts').doc(postId).delete();
+      await this.fireStore.collection('insta_comments', ref => ref.where('postId', '==', postId))
+      .get()
+      .subscribe(result => {
+        result.docs.forEach(doc => {
+          doc.ref.delete();
+        })
+      })
+      resolve();
     });
   }
 }

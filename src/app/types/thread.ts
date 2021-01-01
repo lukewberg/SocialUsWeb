@@ -7,4 +7,5 @@ export interface Thread {
     messages?: Message[];
     groupChatName?: string;
     profile?: User;
+    count: number;
 }

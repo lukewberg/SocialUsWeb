@@ -44,7 +44,7 @@ export class AuthService {
         displayName,
         email,
         followers: [],
-        following: [],
+        following: [user.user.uid],
         friendState: [],
         groups: [],
         id: user.user.uid,

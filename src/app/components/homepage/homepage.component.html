@@ -1,4 +1,5 @@
 <div style="padding-top: 70px; align-items: flex-start;" class="horizontal center">
+  <app-full-media-modal *ngIf="medialModalOpen" [post]="selectedPost" [authorProfile]="selectedPostAuthor" (onModalClosed)="medialModalOpen = false;"></app-full-media-modal>
   <div infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500" (scrolled)="isHashtagView ? loadMoreHashtagPosts() : loadMorePosts()"
     class="vertical flex-start">
     <app-postmaker (newPost)="onNewPost($event)"></app-postmaker>
@@ -8,7 +9,7 @@
       <div style="flex: 1;"></div>
       <span class="hashtag-count" style="font-size: 18px;">{{formatNumber(selectedHashtag.count)}} {{selectedHashtag?.count > 1 ? 'posts' : 'post'}}</span>
     </div>
-    <app-post *ngFor="let post of isHashtagView ? hashtagFeed : postFeed" [post]="post" [authorProfile]="getPostUser(post)"
+    <app-post *ngFor="let post of isHashtagView ? hashtagFeed : postFeed" (onImageClicked)="postImageClicked($event)" [post]="post" [authorProfile]="getPostUser(post)"
       [currentUser]="authService.userFirestore"></app-post>
   </div>
   <div class="side-panel">
@@ -19,7 +20,7 @@
       </div>
       <div class="horizontal" style="flex-wrap: wrap; justify-content: flex-start;">
         <div *ngFor="let hashtag of hashtags; let i = index;" (click)="loadHashtagPosts(hashtag.id, i)" class="hashtag vertical">
-          <span>{{i+1}}: {{hashtag?.id}}</span>
+          <span>{{hashtag?.id}}</span>
           <span class="hashtag-count">{{formatNumber(hashtag.count)}} {{hashtag?.count > 1 ? 'posts' : 'post'}}</span>
         </div>
       </div>

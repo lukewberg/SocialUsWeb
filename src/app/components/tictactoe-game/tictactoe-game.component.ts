@@ -31,10 +31,14 @@ export class TictactoeGameComponent implements OnInit, OnDestroy {
     'squareEight',
     'squareNine'
   ];
+  isPlayer: boolean;
 
   constructor(public fireStore: AngularFirestore) { }
 
   ngOnInit(): void {
+    if (this.currentUser.id === this.post.playerOneId || this.currentUser.id === this.post.playerTwoId) {
+      this.isPlayer = true;
+    }
     if (this.currentUser.id === this.post.playerOneId) {
       this.gameChar = 'X';
     } else {

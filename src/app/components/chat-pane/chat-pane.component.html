@@ -3,13 +3,13 @@
         <div class="profile-picture" [style]="profile?.photoUrl ? 'background-image: url(' + profile?.photoUrl +');' : ''"></div>
         <span class="profile-display-name">{{profile?.displayName}}</span>
         <div style="flex: 1;"></div>
-        <div (click)="closeChat()" class="close-button"></div>
+        <div (click)="closeChat()" class="close-button hidden-button"></div>
     </div>
     <div #messageContainer class="chat-container">
         <app-chat *ngFor="let message of thread?.messages" [message]="message"></app-chat>
     </div>
     <div class="composition-container horizontal center">
-        <div (keyup)="keyCheck($event)" #messageInput class="message-input horizontal start" placeholder="Write a message..." (input)="message=$event.target.textContent" contenteditable="true"></div>
+        <div (keyup)="keyCheck($event)" #messageInput class="input message-input horizontal start" placeholder="Write a message..." (input)="message=$event.target.textContent" contenteditable="true"></div>
         <div (click)="emitAndClear()" class="send-button"></div>
     </div>
 </div>

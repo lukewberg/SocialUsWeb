@@ -1,0 +1,27 @@
+<div class="full-media-modal-container horizontal center">
+    <div class="horizontal center" style="align-items: flex-start">
+        <div class="image-container vertical">
+        <div class="image" [style]="'background-image: url(' +post.mediaUrl + ');' + 'width: ' + image.width + 'px;' + 'height: ' + image.height + 'px;'"></div>
+    </div>
+    <div class="info-container vertical">
+        <div class="horizontal start" style="width: 100%;">
+            <div class="profile-picture" [style]="'background-image: url(' +authorProfile?.photoUrl + ');'"></div>
+            <div class="vertical" style="align-items: flex-start;">
+                <span class="profile-display-name">@{{authorProfile?.displayName}}</span>
+                <span class="profile-handle" style="font-family: Lato; font-size: 14px;">{{authorProfile?.username}}</span>
+            </div>
+            <div style="flex: 1;"></div>
+            <div (click)="closeModal()" class="hidden-button close-button"></div>
+        </div>
+        <div class="description-container">
+            <p>
+                <span class="author-username">{{authorProfile?.username}}</span>:
+                <span class="post-description">{{post?.description}}</span>
+            </p>
+        </div>
+        <div class="horizontal">
+
+        </div>
+    </div>
+    </div>
+</div>

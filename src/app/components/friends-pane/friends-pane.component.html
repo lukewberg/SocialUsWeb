@@ -1,26 +1,42 @@
-<!-- <div *ngIf="messageService.friendPaneEnabled && isAuthenticated" class="friends-pane vertical start">
-  <div class="overview-container">
-
-  </div>
+<div *ngIf="messageService.friendPaneEnabled && isAuthenticated" class="friends-pane vertical start">
   <div class="friends-pane-container">
-    <span class="section-label">Friends</span>
-    <div *ngFor="let friend of userService.friends" class="friend-container horizontal">
-        <div [routerLink]="['/profile']" [queryParams]="{uid: friend?.id}" class="profile-picture"
-          [style]="'background-image: url(' + friend.photoUrl + ');'"></div>
-        <span class="friend-username">{{friend.username }}</span>
-        <div (click)="openChat(friend.id, friend)" class="chat-button"></div>
+    <div class="section-header vertical" style="align-items: flex-start;">
+      <div class="horizontal space-between" style="width: 100%; align-items: center;">
+        <span class="section-label">Conversations</span>
+        <div class="new-conversation-button hidden-button" [ngClass]="{'new': !isNewThread, 'cancel': isNewThread}"
+          (click)="!isNewThread ? composeNewThread() : cancelThreadComposition()"></div>
+      </div>
     </div>
-  </div>
-  <div *ngIf="messageService?.threads?.length > 0" class="friends-pane-container">
-    <span class="section-label">Conversations</span>
-    <div *ngFor="let thread of messageService.threads" class="friend-container horizontal">
+    <div *ngIf="isNewThread">
+      <div style="margin-top: 15px; margin-left: 15px;">
+        <span class="section-label">Start a conversation with:</span>
+      </div>
+      <div *ngFor="let user of following" class="friend-container horizontal">
+        <div [routerLink]="['/profile']" [queryParams]="{uid: user?.id}" class="profile-picture"
+          [style]="'background-image: url(' + user?.photoUrl + ');'"></div>
+        <span class="friend-username">{{user?.username}}</span>
+        <div (click)="openChat(user?.id, user)" class="action-button chat-button"></div>
+      </div>
+    </div>
+    <div *ngIf="!isNewThread && messageService.threads.length > 0">
+      <div *ngFor="let thread of messageService.threads" (click)="openChat(thread?.profile?.id, thread.profile)"
+        class="friend-container hidden-button horizontal">
         <div [routerLink]="['/profile']" [queryParams]="{uid: thread?.profile?.id}" class="profile-picture"
           [style]="'background-image: url(' + thread.profile?.photoUrl + ');'"></div>
-        <span class="friend-username">{{thread?.profile?.username }}</span>
-        <div (click)="openChat(thread?.profile?.id, thread.profile)" class="action-button chat-button"></div>
+        <div class="vertical space-between" style="align-items: flex-start; height: 100%; padding: 17px 0;">
+          <span class="friend-username">{{thread?.profile?.username}}</span>
+          <span *ngIf="thread.messages.length > 0" class="message-preview"
+            [ngClass]="{'new-message': thread.messages[thread.messages.length - 1].read == false}">
+            {{thread.messages[thread.messages.length - 1].message | truncate : 35}}
+          </span>
+        </div>
+        <div style="flex: 1;"></div>
+        <div class="chat-arrow"></div>
+      </div>
     </div>
   </div>
-  <div *ngIf="chatOpen" class="chat-pane">
-    <app-chat-pane [thread]="currentChat" [profile]="chatRecipient" (chatClosed)="this.chatOpen = false;" (sendMessage)="sendMessage($event)"></app-chat-pane>
+  <div *ngIf="messageService.chatOpen" class="chat-pane">
+    <app-chat-pane [thread]="messageService.currentThread" [profile]="messageService.chatRecipient" (chatClosed)="this.messageService.chatOpen = false;"
+      (sendMessage)="sendMessage($event)"></app-chat-pane>
   </div>
-</div> -->
+</div>

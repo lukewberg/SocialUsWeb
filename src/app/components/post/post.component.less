@@ -9,6 +9,8 @@ p {
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
     width: 680px;
     margin: 15px 0;
+    position: relative;
+    overflow: hidden;
 }
 
 .post-img {
@@ -18,6 +20,7 @@ p {
     background-size: cover;
     height: 500px;
     margin-bottom: 5px;
+    cursor: pointer;
 }
 
 .profile-picture {
@@ -280,6 +283,90 @@ p {
     font-family: Lato;
     color: #686868;
     font-size: 14px;
+}
+
+.options-button {
+    width: 40px;
+    height: 40px;
+    background-image: url('/assets/img/vertical-ellipsis-icn.png');
+    background-position: center;
+    background-size: 15%;
+    background-repeat: no-repeat;
+}
+
+.options-flyout {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    width: 200px;
+    position: absolute;
+    right: 0;
+    margin-top: 5px;
+    z-index: 1;
+}
+
+.options-item {
+    padding: 5px;
+    width: 100%;
+    color: #414141;
+    border-radius: 5px;
+    font-family: LatoBlack;
+    font-size: 14px;
+    user-select: none;
+}
+
+.options-modal-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(196, 196, 196, 0.32);
+    align-items: center;
+    z-index: 1;
+}
+
+.options-modal {
+    padding: 10px;
+    width: 300px;
+    height: 250px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+}
+
+.delete-icn {
+    background-image: url('/assets/img/trash-red-icn.png');
+    background-position: center;
+    background-size: 75%;
+    background-repeat: no-repeat;
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+}
+
+.modal-header {
+    font-family: LatoBlack;
+    font-size: 21px;
+    color: #414141;
+    width: 100%;
+    padding: 10px;
+}
+
+.modal-body {
+    width: 100%;
+    align-items: center;
+    padding: 0 10px;
+    font-family: Lato;
+    font-size: 20px;
+    color: #FF785A;
+    flex: 1;
+    text-align: center;
+}
+
+.modal-buttons-container {
+    width: 100%;
 }
 
 @keyframes like-spin {

@@ -99,6 +99,8 @@ export class UserService {
         following: firestore.FieldValue.arrayUnion(id)
       }).then(() => {
         resolve();
+      }, error => {
+        reject(error);
       });
     });
   }
@@ -173,6 +175,21 @@ export class UserService {
       this.fireStore.collection('users').doc(this.authService.userFirestore.id).update({
         groups: firestore.FieldValue.arrayUnion(gid)
       });
+    });
+  }
+
+  requestGroupMembership(gid: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.fireStore.collection('groups').doc(gid).update({
+        members: firestore.FieldValue.arrayUnion({
+          userId: this.authService.userFirestore.id,
+          membershipState: 'MembershipState.pendingJoinRequest'
+        })
+      }).then(result => {
+        resolve(result);
+      }, error => {
+        reject(error);
+      })
     });
   }
 }

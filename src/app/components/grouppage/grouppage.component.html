@@ -10,11 +10,13 @@
       <div style="flex: 1;"></div>
       <div class="vertical">
         <div class="horizontal">
-          <div *ngIf="group?.isPrivate" class="status-icon"></div>
-          <div (click)="joinGroup()" class="action-button" [ngClass]="{'joined': isMember}">
+          <div (click)="!group?.isPrivate && !isInvitePending && !isRequestPending && !isMember ? joinGroup() : requestMembership()" class="action-button horizontal" [ngClass]="{'joined': isMember}">
             {{isMember ? 'Joined' : undefined}}
-            {{!isMember && group?.isPrivate ? 'Request membership' : undefined}}
-            {{!isMember && !group?.isPrivate ? 'Join group' : undefined}}
+            {{!isMember && group?.isPrivate && !isInvitePending && !isRequestPending ? 'Request membership' : undefined}}
+            {{!isMember && !group?.isPrivate && !isInvitePending && !isRequestPending ? 'Join group' : undefined}}
+            {{isRequestPending ? 'Membership Pending': undefined}}
+            {{isInvitePending ? 'Accept Invite' : undefined}}
+            <div *ngIf="group?.isPrivate && !isMember" class="status-icon"></div>
           </div>
         </div>
       </div>
@@ -34,7 +36,7 @@
       </div>
     </div>
     <div class="vertical">
-      <app-postmaker [collection]="groupRef?.path + '/' + 'group_posts'" (newPost)="onNewPost($event)" style="margin-top: -15px;"></app-postmaker>
+      <app-postmaker *ngIf="isMember && !isInvitePending && !isRequestPending" [collection]="groupRef?.path + '/' + 'group_posts'" (newPost)="onNewPost($event)" style="margin-top: -15px;"></app-postmaker>
       <app-post *ngFor="let post of posts" [authorProfile]="getPostUser(post)" [post]="post"
         [currentUser]="authService.userFirestore"></app-post>
     </div>

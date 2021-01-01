@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PostService } from 'src/app/services/post.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
@@ -25,6 +25,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
     { divider: 1e3, suffix: 'K' }];
   isHashtagView = false;
   selectedHashtag: hashtag;
+  selectedPost: Post;
+  selectedPostAuthor: User;
+  medialModalOpen = false;
 
   constructor(public postService: PostService, public authService: AuthService, public userService: UserService) { }
 
@@ -32,10 +35,14 @@ export class HomepageComponent implements OnInit, OnDestroy {
     if (this.authService.userFirestore && this.authService.userFirestore.following.length > 0) {
       this.getGlobalFeed();
       this.getTrendingHashtags();
+    } else if (this.authService.userFirestore) {
+      this.getTrendingHashtags();
     } else {
       this.authServiceInitialized = this.authService.initializedEvent.subscribe(result => {
         if (result === 'initialized' && this.authService.userFirestore.following.length > 0) {
           this.getGlobalFeed();
+          this.getTrendingHashtags();
+        } else if (result === 'initialized') {
           this.getTrendingHashtags();
         }
       });
@@ -78,6 +85,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
   }
 
   getTrendingHashtags(): void {
+    console.log('Getting trending Hashtags...')
     this.postService.getTrendingHashtags().then(result => {
       result.forEach(doc => {
         let hashtag: hashtag = {
@@ -128,5 +136,12 @@ export class HomepageComponent implements OnInit, OnDestroy {
     this.postService.getPaginatedGlobalFeed(this.authService.userFirestore).then(result => {
       this.getComments(result);
     });
+  }
+
+  postImageClicked(event: { post: Post, postAuthor: User }): void {
+    this.selectedPost = event.post;
+    this.selectedPostAuthor = event.postAuthor;
+    this.medialModalOpen = true;
+
   }
 }

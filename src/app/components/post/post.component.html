@@ -1,4 +1,4 @@
-<div class="vertical post-container">
+<div *ngIf="!isDeleted" class="vertical post-container">
     <div class="horizontal flex-start" style="padding: 8px; width: 100%;">
         <div [routerLink]="['/profile']" [queryParams]="{uid: authorProfile?.id}" class="profile-picture" [style]="'background-image: url(' + authorProfile?.photoUrl + ');'"></div>
         <div [routerLink]="['/profile']" [queryParams]="{uid: authorProfile?.id}" class="vertical" style="align-items: flex-start; outline: none;">
@@ -7,9 +7,32 @@
         </div>
         <div style="flex: 1;"></div>
         <div *ngIf="isGame" class="game-icn"></div>
+        <div *ngIf="authorProfile?.id == currentUser?.id" style="display: block; position: relative;">
+            <div class="options-button hidden-button" (click)="flyoutOpen = !flyoutOpen"></div>
+            <div *ngIf="flyoutOpen" class="options-flyout">
+                <div class="options-item hidden-button horizontal start" (click)="openDeleteModal()">
+                    <div class="delete-icn"></div>
+                    Delete post
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="deleteOpen" class="options-modal-container vertical center">
+        <div class="options-modal vertical">
+            <div class="modal-header">Delete Post</div>
+            <div class="modal-body center">
+                <p>
+                    Are you sure you want to delete this post?
+                </p>
+            </div>
+            <div class="modal-buttons-container horizontal space-between">
+                <div (click)="deletePost()" class="action-button delete">Delete</div>
+                <div (click)="deleteOpen = false" class="action-button">Cancel</div>
+            </div>
+        </div>
     </div>
     <app-tictactoe-game *ngIf="isGame && isTicTacToe" [authorProfile]="authorProfile" [opponentProfile]="opponentProfile" [post]="post" [currentUser]="currentUser"></app-tictactoe-game>
-    <div *ngIf="!isVideo && !isGame && post.mediaUrl.length > 0" class="post-img" [style]="'background-image: url(' + post?.mediaUrl + ');'"></div>
+    <div *ngIf="!isVideo && !isGame && post?.mediaUrl?.length > 0" class="post-img" (click)="imageClicked()" [style]="'background-image: url(' + post?.mediaUrl + ');'"></div>
     <div *ngIf="isVideo" class="video-container">
         <video (loadeddata)="onVideoLoad($event)" (click)="toggleVideo()" (timeupdate)="videoPlayingCallback($event)" #video class="video" [src]="post.mediaUrl"></video>
         <div *ngIf="!videoIsToggled" (click)="toggleVideo()" class="video-play-pause-button"></div>
@@ -22,14 +45,14 @@
             </div>
         </div>
     </div>
-    <div *ngIf="post?.description.length > 0 && !isGame && post.mediaUrl.length > 0" class="post-content-box vertical" style="align-items: flex-start;">
+    <div *ngIf="post?.description.length > 0 && !isGame && post?.mediaUrl?.length > 0" class="post-content-box vertical" style="align-items: flex-start;">
         <p>
             <span class="author-username">{{post?.username? post?.username + ':   ' : authorProfile?.username + ':   '}}</span>
             <span class="post-description" [innerHTML]="parseUsernameMentions(post?.description)"></span>
         </p>
         <span class="post-date">{{moment().diff(moment(post.timestamp.toDate()), 'days') > 1 ? moment(post.timestamp.toDate()).format('MMMM Do') : moment(post.timestamp.toDate()).fromNow()}}</span>
     </div>
-    <div *ngIf="post?.description.length > 0 && !isGame && post.mediaUrl.length == 0" class="horizontal text-only-container">
+    <div *ngIf="post?.description.length > 0 && !isGame && post?.mediaUrl == undefined" class="horizontal text-only-container">
         <div class="text-only-sidebar"></div>
         <span class="text-only-content" [innerHTML]="parseUsernameMentions(post?.description)"></span>
     </div>

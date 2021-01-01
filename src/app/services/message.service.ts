@@ -13,9 +13,13 @@ import * as moment from 'moment';
 })
 export class MessageService {
 
-  friendPaneEnabled = true;
+  friendPaneEnabled = false;
+  chatPaneEnabled = false;
+  currentThread: Thread;
   threads: Thread[];
   newMessage = new EventEmitter<NewMessage>();
+  chatOpen = false;
+  chatRecipient: User;
 
   constructor(public fireStore: AngularFirestore, public authService: AuthService) {
     this.authService.initializedEvent.subscribe(result => {
@@ -26,6 +30,21 @@ export class MessageService {
         });
       }
     });
+  }
+
+  updateOrder(thread: Thread): void {
+    // find index
+    var index = this.threads.findIndex(o => o.id === thread.id);
+    // if already at start, nothing to do
+    if (index === 0) return;
+    // remove old occurrency, if existing
+    if (index > 0) {
+      this.threads.splice(index, 1);
+    }
+    // add thread to the start
+    this.threads.unshift(thread);
+    // keep array at the correct size
+    this.threads.length = Math.min(this.threads.length, 4);
   }
 
   getThreads(): Promise<Thread[]> {
@@ -44,7 +63,7 @@ export class MessageService {
             .then(user => {
               thread.profile = user.data() as User;
               threads.push(thread);
-              this.messageListner(doc);
+              this.messageListener(doc);
             });
           });
         });
@@ -55,16 +74,23 @@ export class MessageService {
     });
   }
 
-  messageListner(doc: QueryDocumentSnapshot<DocumentData>): void {
+  messageListener(doc: QueryDocumentSnapshot < DocumentData > ): void {
     doc.ref.collection('messages').orderBy('timestamp', 'desc').onSnapshot(message => {
-      if (message.docs.length > 0) {
+      if (message.docChanges().length > 0) {
         //const processedMessage = message.docs[0].data() as Message;
         const processedMessage = message.docChanges().find(ref => ref.type === 'added').doc.data() as Message;
         const thread = this.threads.find(ref => ref.id === doc.id);
+        this.updateOrder(thread);
         const threadIndex = this.threads.indexOf(thread);
-        console.log(thread);
         this.threads[threadIndex].messages = [...thread.messages, processedMessage];
-        this.newMessage.emit({message: processedMessage, threadIndex});
+        // if (!this.chatPaneEnabled || this.chatPaneEnabled && this.currentThread.id !== thread.id) {
+        //   console.log('UNREAD MESSAGE')
+        //   thread.messages[thread.messages.length - 1].read = false;
+        // }
+        this.newMessage.emit({
+          message: processedMessage,
+          threadIndex
+        });
       }
     });
   }
@@ -93,13 +119,14 @@ export class MessageService {
           members: [
             id,
             this.authService.userFirestore.id
-          ]
+          ],
+          count: 0
         }).then(result => {
           thread.get().subscribe(result => {
             const thread = result.data();
             thread.messages = [];
             thread.id = chatId;
-            this.messageListner(result);
+            this.messageListener(result);
             resolve(thread as Thread);
             this.threads.push(thread as Thread);
           });
@@ -115,12 +142,16 @@ export class MessageService {
       this.fireStore.collection('messages').doc(id).collection('messages')
       .doc<Message>(this.fireStore.createId())
       .set({
-        userId: self.id,
+        authorId: self.id,
         message,
         timestamp: firestore.Timestamp.now(),
         mediaUrl: mediaUrl ? mediaUrl : '',
-      }).then(result => {
-        console.log(`Sent message: ${message}`);
+      }).then(async result => {
+        await this.fireStore.collection('messages').doc(id).update({
+          count: firestore.FieldValue.increment(1)
+        });
+        // var thread = this.threads[this.threads.findIndex(o => o.id === id)]
+        // this.updateOrder(thread);
         resolve(result);
       }).catch(error => {
         reject(error);

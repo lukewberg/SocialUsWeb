@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit {
 
   signOut(): void {
     this.authService.signOut();
+    this.isAuthenticated = false;
     this.router.navigateByUrl('authenticate');
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import { User } from 'src/app/types/user';
 import { Post } from 'src/app/types/post';
 import { TicTacToePost } from 'src/app/types/ticTacToePost';
@@ -16,6 +16,8 @@ export class PostComponent implements OnInit {
   @Input() authorProfile: User;
   @Input() post: Post & TicTacToePost;
   @Input() currentUser: User;
+  @Output() onHashtagClicked = new EventEmitter<string>();
+  @Output() onImageClicked = new EventEmitter<{post: Post, postAuthor: User}>();
   @ViewChild('video') video: ElementRef;
   @ViewChild('commentInput') commentInput: ElementRef;
   @ViewChild('progressBar') progressBar: ElementRef;
@@ -38,7 +40,11 @@ export class PostComponent implements OnInit {
   ranges = [
     { divider: 1e9, suffix: 'B' },
     { divider: 1e6, suffix: 'M' },
-    { divider: 1e3, suffix: 'K' }];
+    { divider: 1e3, suffix: 'K' }
+  ];
+  flyoutOpen = false;
+  deleteOpen = false;
+  isDeleted = false;
 
   constructor(public postService: PostService, public userService: UserService) { }
 
@@ -65,9 +71,13 @@ export class PostComponent implements OnInit {
   }
 
   parseUsernameMentions(description: string): string {
-    return description.replace(/[@]+[A-Za-z0-9-_]+/g, (u): string => {
+    let mentionText = description.replace(/[@]+[A-Za-z0-9-_]+/g, (u): string => {
       return `<span class="profile-handle">${u}</span>`;
     });
+    let hashtagText = mentionText.replace(/(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g, (u): string => {
+      return `<span class="hashtag">${u}</span>`
+    })
+    return hashtagText;
   }
 
   postComment(): void {
@@ -151,6 +161,24 @@ export class PostComponent implements OnInit {
           this.post.likes.push(this.currentUser.id);
         });
     }
+  }
+
+  openDeleteModal(): void {
+    this.flyoutOpen = false;
+    this.deleteOpen = true;
+  }
+
+  deletePost(): void {
+    this.postService.deletePost(this.post.postId, this.post.mediaUrl).then(() => {
+      this.isDeleted = true;
+    })
+  }
+
+  imageClicked(): void {
+    this.onImageClicked.emit({
+      post: this.post,
+      postAuthor: this.authorProfile
+    })
   }
 
 }

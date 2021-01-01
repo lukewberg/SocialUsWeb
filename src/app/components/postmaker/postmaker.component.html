@@ -13,7 +13,7 @@
       (input)="postContent=$event.target.textContent" contenteditable="true"></div>
   </div>
     <div class="details horizontal end">
-      <input (change)="uploadImage($event)" id="imageUpload" type="file" style="opacity: 0; visibility: hidden; display: none;">
+      <input (change)="uploadImage($event)" id="imageUpload" type="file" accept="image/*" style="opacity: 0; visibility: hidden; display: none;">
       <label *ngIf="!uploadPercent" class="vertical center" for="imageUpload">
         <div class="action-button vertical center">Upload Media</div>
       </label>

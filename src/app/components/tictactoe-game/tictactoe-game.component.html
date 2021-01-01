@@ -1,29 +1,29 @@
 <div class="tictactoe-container vertical center">
-        <div (click)="(post?.squareOne !== '' || post?.squareOne !== gameChar) && isTurn ? playTurn('squareOne') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareOne !== '' || post?.squareOne !== gameChar) && isTurn ? playTurn('squareOne') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareOne == 'X', 'o': post?.squareOne == 'O'}"></div>
         </div>
-        <div (click)="(post?.squareTwo !== '' || post?.squareTwo !== gameChar) && isTurn ? playTurn('squareTwo') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareTwo !== '' || post?.squareTwo !== gameChar) && isTurn ? playTurn('squareTwo') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareTwo == 'X', 'o': post?.squareTwo == 'O'}"></div>
         </div>
-        <div (click)="(post?.squareThree !== '' || post?.squareThree !== gameChar) && isTurn ? playTurn('squareThree') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareThree !== '' || post?.squareThree !== gameChar) && isTurn ? playTurn('squareThree') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareThree == 'X', 'o': post?.squareThree == 'O'}"></div>
         </div>
-        <div (click)="(post?.squareFour !== '' || post?.squareFour !== gameChar) && isTurn ? playTurn('squareFour') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareFour !== '' || post?.squareFour !== gameChar) && isTurn ? playTurn('squareFour') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareFour == 'X', 'o': post?.squareFour == 'O'}"></div>
         </div>
-        <div (click)="(post?.squareFive !== '' || post?.squareFive !== gameChar) && isTurn ? playTurn('squareFive') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareFive !== '' || post?.squareFive !== gameChar) && isTurn ? playTurn('squareFive') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareFive == 'X', 'o': post?.squareFive == 'O'}"></div>
         </div>
-        <div (click)="(post?.squareSix !== '' || post?.squareSix !== gameChar) && isTurn ? playTurn('squareSix') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareSix !== '' || post?.squareSix !== gameChar) && isTurn ? playTurn('squareSix') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareSix == 'X', 'o': post?.squareSix == 'O'}"></div>
         </div>
-        <div (click)="(post?.squareSeven !== '' || post?.squareSeven !== gameChar) && isTurn ? playTurn('squareSeven') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareSeven !== '' || post?.squareSeven !== gameChar) && isTurn ? playTurn('squareSeven') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareSeven == 'X', 'o': post?.squareSeven == 'O'}"></div>
         </div>
-        <div (click)="(post?.squareEight !== '' || post?.squareEight !== gameChar) && isTurn ? playTurn('squareEight') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareEight !== '' || post?.squareEight !== gameChar) && isTurn ? playTurn('squareEight') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareEight == 'X', 'o': post?.squareEight == 'O'}"></div>
         </div>
-        <div (click)="(post?.squareNine !== '' || post?.squareNine !== gameChar) && isTurn ? playTurn('squareNine') : undefined" class="square vertical center">
+        <div (click)="(isPlayer && post?.squareNine !== '' || post?.squareNine !== gameChar) && isTurn ? playTurn('squareNine') : undefined" class="square vertical center">
             <div [ngClass]="{'x': post?.squareNine == 'X', 'o': post?.squareNine == 'O'}"></div>
         </div>
     </div>

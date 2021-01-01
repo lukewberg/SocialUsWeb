@@ -25,6 +25,8 @@ export class GrouppageComponent implements OnInit {
   gid: string;
   isMember = false;
   posts = [];
+  isInvitePending = false;
+  isRequestPending = false;
 
   constructor(public userService: UserService, private router: ActivatedRoute, public authService: AuthService,
               public postService: PostService) { }
@@ -44,6 +46,8 @@ export class GrouppageComponent implements OnInit {
   }
 
   init(): void {
+    this.groupAdmins = [];
+    this.groupMembers = [];
     this.routeSubscription = this.router.queryParamMap.subscribe(routeParams => {
       const gid = routeParams.get('gid');
       this.gid = gid;
@@ -54,21 +58,30 @@ export class GrouppageComponent implements OnInit {
           console.log(member.userId);
           this.userService.getUser(member.userId).then(result => {
             this.groupMembers.push(result.data());
-            if (member.userId === this.user.id) {
+            if (member.userId === this.user.id && member.membershipState !== 'MembershipState.pendingJoinRequest' && member.membershipState !== 'MembershipState.pendingInvite') {
               this.isMember = true;
               console.log('You are a member!')
+            } else if (member.userId === this.user.id && member.membershipState === 'MembershipState.pendingJoinRequest') {
+              this.isMember = false;
+              this.isRequestPending = true;
+            } else if (member.userId === this.user.id && member.membershipState === 'MembershipState.pendingInvite') {
+              this.isMember = false;
+              this.isInvitePending = true;
+            }
+          }).finally(() => {
+            if (this.isMember) {
+              console.log('User is member, getting posts!')
+              this.getPosts();
             }
           });
-        })
+        });
         this.group.admins.forEach(admin => {
           console.log(admin);
           this.userService.getUser(admin).then(result => {
             this.groupAdmins.push(result.data())
           })
         })
-      }).finally(() => {
-        this.getPosts();
-      });
+      })
     });
   }
 
@@ -102,9 +115,17 @@ export class GrouppageComponent implements OnInit {
   }
 
   joinGroup(): void {
+    console.log('Joining group!');
     this.userService.joinGroup(this.gid).then(() => {
-      this.isMember = true;
+      this.init();
     });
+  }
+
+  requestMembership(): void {
+    console.log('Requesting membership!');
+    this.userService.requestGroupMembership(this.groupRef.id).then(result => {
+      this.isRequestPending = true;
+    })
   }
 
   onNewPost(post: Post): void {

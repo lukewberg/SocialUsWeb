@@ -1,6 +1,7 @@
 export interface Message {
-    userId: string;
+    authorId: string;
     mediaUrl?: string;
     message: string;
     timestamp: firebase.firestore.Timestamp;
+    read?: boolean;
 }

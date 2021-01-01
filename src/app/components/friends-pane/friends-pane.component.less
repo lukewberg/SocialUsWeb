@@ -1,10 +1,11 @@
 .friends-pane {
     width: 350px;
     position: fixed;
-    right: 20px;
-    top: 90px;
+    right: 0;
+    top: 70px;
     bottom: 0;
     -ms-overflow-style: none;
+    overflow: visible;
     /* IE and Edge */
     scrollbar-width: none;
     /* Firefox */
@@ -12,14 +13,9 @@
 }
 
 .friends-pane-container {
-    border-radius: 15px;
-    background-color: #fff;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
-    padding: 15px;
-    margin-bottom: 25px;
+    padding: 0 15px 0 15px;
     width: 100%;
-    min-height: 350px;
-    max-height: 500px;
+    height: 100%;
     -ms-overflow-style: none;
     /* IE and Edge */
     scrollbar-width: none;
@@ -35,26 +31,34 @@
   display: none;
 }
 
+.section-header {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    align-items: center;
+}
+
 .section-label {
     font-family: LatoBlack;
-    font-size: 24px;
-    align-self: flex-start;
-    margin: 0 0 10px 0;
+    font-size: 20px;
+    color: #414141;
     user-select: none;
 }
 
 .friend-container {
     width: 100%;
-    border-radius: 15px;
+    border-radius: 10px;
     background-color: #fff;
     height: 70px;
     margin-top: 15px;
     padding: 0 15px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
 }
 
 .profile-picture {
     border-radius: 100%;
+    border: 2px solid #fff;
     width: 50px;
     height: 50px;
     background-size: cover;
@@ -63,6 +67,7 @@
     margin-right: 10px;
     outline: none;
     cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
 }
 
 .friend-username {
@@ -87,5 +92,42 @@
 .chat-pane {
     position: absolute;
     bottom: 0;
-    right: 100px;
+    right: 30px;
+}
+
+.new-conversation-button {
+    width: 40px;
+    height: 40px;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all .25s ease;
+}
+
+.cancel {
+    background-image: url('/assets/img/cancel-blue-icn.png');
+    background-size: 100%;
+}
+
+.new {
+    background-image: url('/assets/img/add-blue-icn.png');
+    background-size: 70%;
+}
+
+.message-preview {
+    font-family: Lato;
+    font-size: 12px;
+    color: #7d7d7d;
+}
+
+.new-message {
+    color: #4aabfa;
+}
+
+.chat-arrow {
+    background-image: url('/assets/img/chevron-right-icn.png');
+    width: 40px;
+    height: 40px;
+    background-size: 40%;
+    background-position: center;
+    background-repeat: no-repeat;
 }

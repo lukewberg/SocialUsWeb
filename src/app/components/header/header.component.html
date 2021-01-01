@@ -3,7 +3,7 @@
     <div [routerLink]="['']" class="logo"></div>
   </div>
   <div class="horizontal">
-    <div class="horizontal" style="position: relative;">
+    <div *ngIf="isAuthenticated" class="horizontal" style="position: relative;">
       <div #searchInput (focus)="isFocused = true" (focusout)="closeResults()" class="input search-bar horizontal"
         style="flex: 1; outline: none; align-items: center;" placeholder="Search for users, groups and hashtags..."
         (input)="search(searchString=$event.target.textContent)" contenteditable="true">
@@ -44,18 +44,19 @@
     </div>
   </div>
     </div>
-    <div class="horizontal end account-container">
+    <div *ngIf="isAuthenticated" class="horizontal end account-container">
       <div [routerLink]="['/']" class="header-nav-button home" [ngClass]="{'nav-selected': currentUrlPath === '/'}">
       </div>
-      <div [routerLink]="['/messages']" class="header-nav-button message"
-        [ngClass]="{'nav-selected': currentUrlPath === '/messages'}">
+      <div (click)="messageService.friendPaneEnabled = !messageService.friendPaneEnabled" class="header-nav-button message"
+        [ngClass]="{'nav-selected': messageService.friendPaneEnabled}">
       </div>
-      <div class="header-nav-button notifications"></div>
+      <!-- <div class="header-nav-button notifications"></div> -->
       <div [routerLink]="['/profile']" [queryParams]="{uid: authService.userFirestore?.id}"
         class="header-nav-button profile vertical center" [ngClass]="{'nav-selected': currentUrlPath === '/profile'}">
         <div class="profile-picture" [style]="'background-image: url(' + authService?.userFirestore?.photoUrl + ');'"></div>
       </div>
     </div>
+    <div *ngIf="isAuthenticated" (click)="signOut()" class="header-nav-button sign-out"></div>
   </div>
   <!-- <div (click)="signOut()" class="signout-button">
         Sign Out

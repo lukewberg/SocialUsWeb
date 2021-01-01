@@ -2,8 +2,8 @@
     <div class="auth-container vertical space-between">
         <div *ngIf="!isCreateAccount" class="logo"></div>
         <div *ngIf="!isCreateAccount" class="form-container vertical center">
-            <input [(ngModel)]="email" placeholder="Email Address..." type="text">
-            <input (keypress)="signInReturn($event)" [(ngModel)]="password" placeholder="Password..." type="password">
+            <input class="input" [(ngModel)]="email" placeholder="Email Address..." type="text">
+            <input class="input" (keypress)="signInReturn($event)" [(ngModel)]="password" placeholder="Password..." type="password">
             <div style="width: 100%;" class="horizontal space-between">
                 <a href=""><span class="forgot-password">Forgot account details...</span></a>
                 <div (click)="signIn()" class="action-button horizontal center">Sign In</div>
@@ -21,11 +21,11 @@
             </div>
             </label>
             <form [formGroup]="signUpForm">
-                <input for="username" formControlName="username" placeholder="Username..." type="text">
-                <input for="displayName" formControlName="displayName" placeholder="Display Name..." type="text">
+                <input class="input" for="username" formControlName="username" placeholder="Username..." type="text">
+                <input class="input" for="displayName" formControlName="displayName" placeholder="Display Name..." type="text">
                 <div style="margin-bottom: 25px;"></div>
-                <input for="email" formControlName="email" placeholder="Email Address..." type="text">
-                <input for="password" formControlName="password" placeholder="Password..." type="password">
+                <input class="input" for="email" formControlName="email" placeholder="Email Address..." type="text">
+                <input class="input" for="password" formControlName="password" placeholder="Password..." type="password">
             </form>
             <div (click)="createAccount()" style="width: 100%;" class="horizontal center action-button">
                 Create account
